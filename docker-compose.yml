@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  vending_machine:
+    container_name: vending_machine
+    working_dir: /home/wwwroot/vending.machine
+    build:
+      context: .
+      dockerfile: ./ops/docker/Dockerfile
+    volumes:
+      - .:/home/wwwroot/vending.machine
