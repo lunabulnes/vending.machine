@@ -10,5 +10,5 @@ stop:
 enter:
 	@docker-compose exec -u root ${PROJECT} /bin/sh
 
-tests:
+test:
 	@docker-compose exec ${PROJECT} sh -c "./vendor/bin/phpunit --configuration=phpunit.xml"
