@@ -3,34 +3,40 @@ declare(strict_types = 1);
 
 namespace App\Domain;
 
-use App\Domain\Money\Cash;
+use App\Domain\Catalog\Product;
+use App\Domain\Money\Money;
 use App\Domain\Money\Coin;
 
 class VendingMachine
 {
-    private $userCash;
+    private $userMoney;
 
-    private function __construct(Cash $userCash){
-        $this->userCash = $userCash;
+    private function __construct(Money $userMoney){
+        $this->userMoney = $userMoney;
     }
 
     public static function create()
     {
-        return new self(Cash::create());
+        return new self(Money::create());
     }
 
     public function addUserCoin(Coin $coin): void
     {
-        $this->userCash->addCoin($coin);
+        $this->userMoney->addCoin($coin);
     }
 
-    public function getAvailableCash(): float
+    public function getAvailableMoney(): float
     {
-        return $this->userCash->getTotalMoney();
+        return $this->userMoney->getTotalMoney();
     }
 
-    public function returnUserCash(): array
+    public function returnUserCoins(): array
     {
-        return $this->userCash->returnCoins();
+        return $this->userMoney->returnCoins();
+    }
+
+    public function buy($product): Product
+    {
+        return $product;
     }
 }

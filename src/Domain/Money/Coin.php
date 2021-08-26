@@ -36,7 +36,7 @@ class Coin
         return new self($value);
     }
 
-    private static function isValid(float $value)
+    private static function isValid(float $value): bool
     {
         return in_array($value, self::VALID_VALUES);
     }
