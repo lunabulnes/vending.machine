@@ -16,7 +16,7 @@ class VendingMachineTest extends TestCase
     {
         $vendingMachine = VendingMachine::create();
         $vendingMachine->addUserCoin(Coin::create(0.25));
-        $this->assertEquals(0.25, $vendingMachine->getUserMoney());
+        $this->assertEquals(0.25, $vendingMachine->getAvailableCash());
     }
 
     public function testMoneyIsAccumulated()
@@ -24,7 +24,7 @@ class VendingMachineTest extends TestCase
         $vendingMachine = VendingMachine::create();
         $vendingMachine->addUserCoin(Coin::create(0.25));
         $vendingMachine->addUserCoin(Coin::create(1));
-        $this->assertEquals(1.25, $vendingMachine->getUserMoney());
+        $this->assertEquals(1.25, $vendingMachine->getAvailableCash());
     }
 
     public function testReturnsUserMoney()
@@ -36,8 +36,8 @@ class VendingMachineTest extends TestCase
             $vendingMachine->addUserCoin($coin);
         }
 
-        $returnedCoins = $vendingMachine->returnUserMoney();
+        $returnedCoins = $vendingMachine->returnUserCash();
         $this->assertEquals($coins, $returnedCoins);
-        $this->assertEquals(0, $vendingMachine->getUserMoney());
+        $this->assertEquals(0, $vendingMachine->getAvailableCash());
     }
 }

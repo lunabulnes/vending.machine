@@ -24,15 +24,13 @@ class VendingMachine
         $this->userCash->addCoin($coin);
     }
 
-    public function getUserMoney(): float
+    public function getAvailableCash(): float
     {
         return $this->userCash->getTotalMoney();
     }
 
-    public function returnUserMoney(): array
+    public function returnUserCash(): array
     {
-        $userCoins = $this->userCash->returnMoney();
-        $this->userCash->resetMoney();
-        return $userCoins;
+        return $this->userCash->returnCoins();
     }
 }

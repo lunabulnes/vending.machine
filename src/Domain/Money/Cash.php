@@ -31,9 +31,11 @@ class Cash
         return $total;
     }
 
-    public function returnMoney(): array
+    public function returnCoins(): array
     {
-        return $this->coins;
+        $coins = $this->coins;
+        $this->resetMoney();
+        return $coins;
     }
 
     public function resetMoney(): void
