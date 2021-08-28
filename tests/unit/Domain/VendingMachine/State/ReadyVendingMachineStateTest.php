@@ -9,27 +9,27 @@ use App\Domain\Money\Coin;
 use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Purchase;
 use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
-use App\Domain\VendingMachine\VendingMachine;
+use App\Domain\VendingMachine\State\ReadyVendingMachineState;
 use PHPUnit\Framework\TestCase;
 
 class VendingMachinetest extends TestCase
 {
     public function testVendingMachineCanBeCreated()
     {
-        $vendingMachine = VendingMachine::create();
-        $this->assertTrue($vendingMachine instanceof VendingMachine);
+        $vendingMachine = ReadyVendingMachineState::create();
+        $this->assertTrue($vendingMachine instanceof ReadyVendingMachineState);
     }
 
     public function testUserCoinCanBeAdded()
     {
-        $vendingMachine = VendingMachine::create();
+        $vendingMachine = ReadyVendingMachineState::create();
         $vendingMachine->addUserCoin(Coin::create(25));
         $this->assertEquals(25, $vendingMachine->getUserMoney());
     }
 
     public function testMoneyIsAccumulated()
     {
-        $vendingMachine = VendingMachine::create();
+        $vendingMachine = ReadyVendingMachineState::create();
         $vendingMachine->addUserCoin(Coin::create(25));
         $vendingMachine->addUserCoin(Coin::create(100));
         $this->assertEquals(125, $vendingMachine->getUserMoney());
@@ -39,7 +39,7 @@ class VendingMachinetest extends TestCase
     {
         $coins = [Coin::create(25), Coin::create(100)];
 
-        $vendingMachine = VendingMachine::create();
+        $vendingMachine = ReadyVendingMachineState::create();
         foreach ($coins as $coin) {
             $vendingMachine->addUserCoin($coin);
         }
@@ -54,7 +54,7 @@ class VendingMachinetest extends TestCase
         $product = Product::create('Juice');
         $catalog = Catalog::create();
         $catalog->refillStock(new Stock($product, 100, 10));
-        $vendingMachine = VendingMachine::createWithCatalog($catalog);
+        $vendingMachine = ReadyVendingMachineState::createWithCatalog($catalog);
 
         $vendingMachine->addUserCoin(Coin::create(100));
         $purchase = $vendingMachine->buy($product);
@@ -65,7 +65,7 @@ class VendingMachinetest extends TestCase
     public function testUserCanNotBuyProductThatDoesNotExistInTheCatalog()
     {
         $product = Product::create('Juice');
-        $vendingMachine = VendingMachine::create();
+        $vendingMachine = ReadyVendingMachineState::create();
 
         $vendingMachine->addUserCoin(Coin::create(100));
 
@@ -78,7 +78,7 @@ class VendingMachinetest extends TestCase
         $product = Product::create('Juice');
         $catalog = Catalog::create();
         $catalog->refillStock(new Stock($product, 100, 0));
-        $vendingMachine = VendingMachine::createWithCatalog($catalog);
+        $vendingMachine = ReadyVendingMachineState::createWithCatalog($catalog);
 
         $vendingMachine->addUserCoin(Coin::create(100));
 
@@ -91,7 +91,7 @@ class VendingMachinetest extends TestCase
         $product = Product::create('Juice');
         $catalog = Catalog::create();
         $catalog->refillStock(new Stock($product, 100, 10));
-        $vendingMachine = VendingMachine::createWithCatalog($catalog);
+        $vendingMachine = ReadyVendingMachineState::createWithCatalog($catalog);
 
         $this->expectException(NotEnoughMoneyException::class);
         $vendingMachine->buy($product);
@@ -102,7 +102,7 @@ class VendingMachinetest extends TestCase
         $product = Product::create('Juice');
         $catalog = Catalog::create();
         $catalog->refillStock(new Stock($product, 100, 10));
-        $vendingMachine = VendingMachine::createWithCatalog($catalog);
+        $vendingMachine = ReadyVendingMachineState::createWithCatalog($catalog);
 
         $vendingMachine->addUserCoin(Coin::create(100));
         $vendingMachine->addUserCoin(Coin::create(25));
@@ -116,7 +116,7 @@ class VendingMachinetest extends TestCase
         $product = Product::create('Juice');
         $catalog = Catalog::create();
         $catalog->refillStock(new Stock($product, 100, 10));
-        $vendingMachine = VendingMachine::createWithCatalog($catalog);
+        $vendingMachine = ReadyVendingMachineState::createWithCatalog($catalog);
 
         $vendingMachine->addUserCoin(Coin::create(100));
         $vendingMachine->buy($product);
@@ -129,7 +129,7 @@ class VendingMachinetest extends TestCase
         $product = Product::create('Juice');
         $catalog = Catalog::create();
         $catalog->refillStock(new Stock($product, 100, 1));
-        $vendingMachine = VendingMachine::createWithCatalog($catalog);
+        $vendingMachine = ReadyVendingMachineState::createWithCatalog($catalog);
 
         $vendingMachine->addUserCoin(Coin::create(100));
         $vendingMachine->buy($product);
@@ -144,7 +144,7 @@ class VendingMachinetest extends TestCase
         $product = Product::create('Juice');
         $catalog = Catalog::create();
         $catalog->refillStock(new Stock($product, 100, 1));
-        $vendingMachine = VendingMachine::createWithCatalog($catalog);
+        $vendingMachine = ReadyVendingMachineState::createWithCatalog($catalog);
 
         $this->assertEquals(0, $vendingMachine->getMachineMoney());
         $vendingMachine->addUserCoin(Coin::create(100));
@@ -159,19 +159,11 @@ class VendingMachinetest extends TestCase
         $catalog = Catalog::create();
         $catalog->refillStock(new Stock($product, 65, 10));
         $machineMoney = Money::createFromCoins([Coin::create(100)]);
-        $vendingMachine = VendingMachine::createWithMoneyAndCatalog($machineMoney, $catalog);
+        $vendingMachine = ReadyVendingMachineState::createWithMoneyAndCatalog($machineMoney, $catalog);
 
         $vendingMachine->addUserCoin(Coin::create(100));
 
         $this->expectException(NotEnoughMoneyException::class);
         $vendingMachine->buy($product);
-    }
-
-    public function testUserCanNotAddCoinsToMachineWhileOutOfService()
-    {
-        $vendingMachine = VendingMachine::createWithMaintenanceState(true);
-
-        $this->expectException(MachineOutOfServiceException::class);
-        $vendingMachine->addUserCoin(Coin::create(25));
     }
 }
