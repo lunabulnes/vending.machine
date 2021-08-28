@@ -20,5 +20,10 @@ You can also enter your docker container running `make enter`
 Run `make run COMMAND="{COMMAND_NAME} {ARGS}"`
 
 Some examples that you can try:
+
 `make run COMMAND="addcoin 10"`
+
+`make run COMMAND="returncoins"`
+
+`make run COMMAND="checkusertotal"`
 

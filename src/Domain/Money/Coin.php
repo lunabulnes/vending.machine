@@ -4,8 +4,10 @@ declare(strict_types = 1);
 namespace App\Domain\Money;
 
 use App\Domain\Money\Exception\InvalidCoinException;
+use http\Encoding\Stream\Inflate;
+use JsonSerializable;
 
-class Coin
+class Coin implements JsonSerializable
 {
     private const ONE_UNIT = 100;
     private const TWENTY_FIVE_CENTS = 25;
@@ -44,5 +46,10 @@ class Coin
     public function value(): int
     {
         return $this->value;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return strval($this->value);
     }
 }

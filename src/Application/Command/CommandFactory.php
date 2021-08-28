@@ -15,6 +15,10 @@ class CommandFactory
         switch ($commandName) {
             case "ADDCOIN":
                 return new AddCoinCommand(new DummyVendingMachineRepository());
+            case "RETURNCOINS":
+                return new ReturnCoinsCommand(new DummyVendingMachineRepository());
+            case "CHECKUSERTOTAL":
+                return new CheckUserTotalCommand(new DummyVendingMachineRepository());
         }
 
         throw new InvalidCommandException();
