@@ -3,7 +3,7 @@
 namespace App\Application\Command;
 
 use App\Application\Command\Exception\InvalidCommandException;
-use App\Infrastructure\VendingMachine\DummyVendingMachineRepository;
+use App\Infrastructure\Repository\VendingMachine\DummyVendingMachineRepository;
 
 class CommandFactory
 {
@@ -25,6 +25,8 @@ class CommandFactory
                 return new GetCatalogCommand(new DummyVendingMachineRepository());
             case "STARTMAINTENANCE":
                 return new StartMaintenanceCommand(new DummyVendingMachineRepository());
+            case "STOPMAINTENANCE":
+                return new StopMaintenanceCommand(new DummyVendingMachineRepository());
         }
 
         throw new InvalidCommandException();

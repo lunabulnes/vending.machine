@@ -9,11 +9,11 @@ use App\Domain\Money\Coin;
 use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
 use App\Domain\VendingMachine\Exception\UnauthorizedActionException;
-use App\Domain\VendingMachine\Purchase;
+use App\Domain\VendingMachine\Purchase\Purchase;
 use App\Domain\VendingMachine\State\OngoingTransactionState;
 use App\Domain\VendingMachine\State\ReadyVendingMachineState;
 use App\Domain\VendingMachine\State\UnderMaintenanceVendingMachineState;
-use App\Domain\VendingMachine\VendingMachineContext;
+use App\Domain\VendingMachine\Context\VendingMachineContext;
 use PHPUnit\Framework\TestCase;
 
 class VendingMachineContextTest extends TestCase
@@ -87,7 +87,7 @@ class VendingMachineContextTest extends TestCase
         $this->assertEquals(25, $vendingMachineContext->getUserMoney());
     }
 
-    public function testItCanTransitionFromOngoingTransactionToReady()
+    public function testItCanTransitionFromOngoingTransactionToReadyBuyingAProduct()
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
@@ -99,6 +99,22 @@ class VendingMachineContextTest extends TestCase
         $purchase = $vendingMachineContext->buy($product);
 
         $this->assertEquals(new Purchase($product), $purchase);
+    }
+
+    public function testItCanTransitionFromOngoingTransactionToReadyReturningCoins()
+    {
+        $coins = [Coin::create(25), Coin::create(100)];
+
+        $vendingMachineState = OngoingTransactionState::create();
+        $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
+
+        foreach ($coins as $coin) {
+            $vendingMachineContext->addUserCoin($coin);
+        }
+
+        $returnedCoins = $vendingMachineContext->returnUserCoins();
+        $this->assertEquals($coins, $returnedCoins);
+        $this->assertEquals(0, $vendingMachineContext->getUserMoney());
     }
 
     public function testUserGetsProductAndChangeIfThereIsTooMuchMoney()

@@ -9,7 +9,7 @@ use App\Domain\Catalog\Product;
 use App\Domain\Money\Coin;
 use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Exception\UnauthorizedActionException;
-use App\Domain\VendingMachine\Purchase;
+use App\Domain\VendingMachine\Purchase\Purchase;
 
 class OngoingTransactionState extends VendingMachineState
 {

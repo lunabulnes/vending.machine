@@ -8,7 +8,7 @@ use App\Domain\Catalog\Product;
 use App\Domain\Money\Money;
 use App\Domain\Money\Coin;
 use App\Domain\VendingMachine\Exception\UnauthorizedActionException;
-use App\Domain\VendingMachine\Purchase;
+use App\Domain\VendingMachine\Purchase\Purchase;
 
 class ReadyVendingMachineState extends VendingMachineState
 {

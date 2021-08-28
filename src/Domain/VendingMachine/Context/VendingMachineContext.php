@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Domain\VendingMachine;
+namespace App\Domain\VendingMachine\Context;
 
 use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Coin;
+use App\Domain\VendingMachine\Purchase\Purchase;
 use App\Domain\VendingMachine\State\ReadyVendingMachineState;
 use App\Domain\VendingMachine\State\VendingMachineState;
+use App\Domain\VendingMachine\VendingMachine;
 
 class VendingMachineContext implements VendingMachine
 {

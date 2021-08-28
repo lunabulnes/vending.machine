@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\VendingMachine;
+namespace App\Infrastructure\Repository\VendingMachine;
 
 use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
@@ -10,7 +10,7 @@ use App\Domain\Money\Money;
 use App\Domain\VendingMachine\State\ReadyVendingMachineState;
 use App\Domain\VendingMachine\State\VendingMachineState;
 use App\Domain\VendingMachine\VendingMachine;
-use App\Domain\VendingMachine\VendingMachineContext;
+use App\Domain\VendingMachine\Context\VendingMachineContext;
 use App\Domain\VendingMachine\VendingMachineRepository;
 
 class DummyVendingMachineRepository implements VendingMachineRepository

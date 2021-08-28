@@ -5,6 +5,7 @@ namespace App\Domain\VendingMachine;
 use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Coin;
+use App\Domain\VendingMachine\Purchase\Purchase;
 use JsonSerializable;
 
 interface VendingMachine extends JsonSerializable

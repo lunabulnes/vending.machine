@@ -8,7 +8,7 @@ use App\Domain\Money\Coin;
 use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
 use App\Domain\VendingMachine\Exception\UnauthorizedActionException;
-use App\Domain\VendingMachine\Purchase;
+use App\Domain\VendingMachine\Purchase\Purchase;
 use JsonSerializable;
 
 class UnderMaintenanceVendingMachineState extends VendingMachineState implements JsonSerializable
@@ -110,6 +110,7 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState implements
     public function jsonSerialize(): array
     {
         return [
+            'class' => self::class,
             'machineMoney' => $this->machineMoney,
             'catalog' => $this->catalog,
         ];

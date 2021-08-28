@@ -26,20 +26,6 @@ class OngoingTransactionStateTest extends TestCase
         $this->assertEquals(125, $vendingMachine->getUserMoney());
     }
 
-    public function testReturnsUserCoins()
-    {
-        $coins = [Coin::create(25), Coin::create(100)];
-
-        $vendingMachine = OngoingTransactionState::create();
-        foreach ($coins as $coin) {
-            $vendingMachine->addUserCoin($coin);
-        }
-
-        $returnedCoins = $vendingMachine->returnUserCoins();
-        $this->assertEquals($coins, $returnedCoins);
-        $this->assertEquals(0, $vendingMachine->getUserMoney());
-    }
-
     public function testUserCanNotBuyProductThatDoesNotExistInTheCatalog()
     {
         $product = Product::create('Juice');
