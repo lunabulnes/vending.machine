@@ -21,6 +21,8 @@ class CommandFactory
                 return new CheckUserTotalCommand(new DummyVendingMachineRepository());
             case "BUY":
                 return new BuyCommand(new DummyVendingMachineRepository());
+            case "GETCATALOG":
+                return new GetCatalogCommand(new DummyVendingMachineRepository());
         }
 
         throw new InvalidCommandException();

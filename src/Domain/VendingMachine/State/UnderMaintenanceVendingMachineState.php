@@ -34,6 +34,11 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState implements
         return new self($machineMoney, $catalog);
     }
 
+    public function getCatalog(): Catalog
+    {
+        return $this->catalog;
+    }
+
     /**
      * @throws MachineOutOfServiceException
      */

@@ -34,6 +34,11 @@ class VendingMachineContext implements VendingMachine
         $this->vendingMachineState->setContext($this);
     }
 
+    public function getCatalog(): Catalog
+    {
+        return $this->vendingMachineState->getCatalog();
+    }
+
     public function addUserCoin(Coin $coin): void
     {
         $this->vendingMachineState->addUserCoin($coin);

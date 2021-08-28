@@ -9,6 +9,7 @@ use JsonSerializable;
 
 interface VendingMachine extends JsonSerializable
 {
+    public function getCatalog(): Catalog;
     public function addUserCoin(Coin $coin): void;
     public function getUserMoney(): int;
     public function returnUserCoins(): array;

@@ -43,6 +43,11 @@ class ReadyVendingMachineState extends VendingMachineState
         return new self($userMoney ?? Money::createFromCoins(), $machineMoney, $catalog);
     }
 
+    public function getCatalog(): Catalog
+    {
+        return $this->catalog;
+    }
+
     public function addUserCoin(Coin $coin): void
     {
         $this->userMoney->addCoin($coin);
