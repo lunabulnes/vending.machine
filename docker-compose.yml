@@ -5,6 +5,7 @@ services:
     container_name: vending_machine
     working_dir: /home/wwwroot/vending.machine
     build:
+      target: dev
       context: .
       dockerfile: ./ops/docker/Dockerfile
     volumes:

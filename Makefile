@@ -7,6 +7,11 @@ start:
 stop:
 	@docker-compose -f ${DOCKER_COMPOSE_FILE} kill ${PROJECT}
 
+logs:
+	@docker-compose -f ${DOCKER_COMPOSE_FILE} logs ${PROJECT}
+
+dev: start logs
+
 enter:
 	@docker-compose exec -u root ${PROJECT} /bin/sh
 
