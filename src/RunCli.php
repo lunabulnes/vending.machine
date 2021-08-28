@@ -10,8 +10,8 @@ $commandName = strtoupper(array_shift($argv));
 try {
     $arguments = $argv ?? [];
     $command = CommandFactory::createByName($commandName);
-    $result = $command->execute($arguments);
-    echo $result . "\n";
+    $response = $command->execute($arguments);
+    echo $response . "\n";
 } catch (Exception $exception) {
     echo $exception->getMessage() . "\n";
 }

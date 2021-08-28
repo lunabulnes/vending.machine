@@ -12,3 +12,6 @@ enter:
 
 test:
 	@docker-compose exec ${PROJECT} sh -c "./vendor/bin/phpunit --configuration=phpunit.xml"
+
+run:
+	@docker-compose exec ${PROJECT} sh -c "php ./src/RunCli.php $$COMMAND"

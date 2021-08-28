@@ -3,9 +3,9 @@
 namespace App\Domain\VendingMachine\State;
 
 use App\Domain\VendingMachine\VendingMachineContext;
-use App\Domain\VendingMachine\VendingMachineInterface;
+use App\Domain\VendingMachine\VendingMachine;
 
-abstract class VendingMachineState implements VendingMachineInterface
+abstract class VendingMachineState implements VendingMachine
 {
     protected $context;
 

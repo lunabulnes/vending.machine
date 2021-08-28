@@ -35,9 +35,12 @@ class ReadyVendingMachineState extends VendingMachineState
         return new self(Money::createFromCoins(), Money::createFromCoins(), $catalog);
     }
 
-    public static function createWithMoneyAndCatalog(Money $money, Catalog $catalog): ReadyVendingMachineState
-    {
-        return new self(Money::createFromCoins(), $money, $catalog);
+    public static function createWithMoneyAndCatalog(
+        Money $machineMoney,
+        Catalog $catalog,
+        Money $userMoney = null
+    ): ReadyVendingMachineState {
+        return new self($userMoney ?? Money::createFromCoins(), $machineMoney, $catalog);
     }
 
     public function addUserCoin(Coin $coin): void
@@ -108,5 +111,15 @@ class ReadyVendingMachineState extends VendingMachineState
     public function stopMaintenance(): void
     {
         throw new UnauthorizedActionException();
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'class' => self::class,
+            'userMoney' => $this->userMoney,
+            'machineMoney' => $this->machineMoney,
+            'catalog' => $this->catalog,
+        ];
     }
 }

@@ -5,8 +5,9 @@ namespace App\Domain\VendingMachine;
 use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Coin;
+use JsonSerializable;
 
-interface VendingMachineInterface
+interface VendingMachine extends JsonSerializable
 {
     public function addUserCoin(Coin $coin): void;
     public function getUserMoney(): int;

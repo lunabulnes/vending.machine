@@ -8,7 +8,7 @@ use App\Domain\Money\Coin;
 use App\Domain\VendingMachine\State\ReadyVendingMachineState;
 use App\Domain\VendingMachine\State\VendingMachineState;
 
-class VendingMachineContext implements VendingMachineInterface
+class VendingMachineContext implements VendingMachine
 {
     private $vendingMachineState;
 
@@ -77,5 +77,12 @@ class VendingMachineContext implements VendingMachineInterface
     public function stopMaintenance(): void
     {
         $this->vendingMachineState->stopMaintenance();
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'state' => $this->vendingMachineState
+        ];
     }
 }

@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace App\Domain\Money;
 
 use App\Domain\Catalog\Exception\NotEnoughMoneyException;
+use JsonSerializable;
 
-class Money
+class Money implements JsonSerializable
 {
     private $groupedCoins;
 
@@ -105,5 +106,17 @@ class Money
         $change = Money::createFromCoins($changeCoins);
         $this->subtract($change);
         return $change;
+    }
+
+    public function jsonSerialize(): array
+    {
+        $temp = [];
+        foreach ($this->groupedCoins as $coinType => $coins) {
+            $temp[] = [
+                'coinType' => $coinType,
+                'quantity' => count($coins),
+            ];
+        }
+        return $temp;
     }
 }

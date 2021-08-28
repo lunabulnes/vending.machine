@@ -2,10 +2,22 @@
 
 namespace App\Application\Command;
 
-class AddCoinCommand implements CommandInterface
+use App\Domain\Money\Coin;
+use App\Domain\VendingMachine\VendingMachineRepository;
+
+class AddCoinCommand implements Command
 {
-    public function execute(array $args): string
+    private $vendingMachineRepository;
+
+    public function __construct(VendingMachineRepository $vendingMachineRepository)
     {
-        return 'EXECUTED';
+        $this->vendingMachineRepository = $vendingMachineRepository;
+    }
+
+    public function execute(array $args)
+    {
+        $vendingMachine = $this->vendingMachineRepository->get();
+        $vendingMachine->addUserCoin(Coin::create($args[0]));
+        $this->vendingMachineRepository->save($vendingMachine);
     }
 }

@@ -9,8 +9,9 @@ use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
 use App\Domain\VendingMachine\Exception\UnauthorizedActionException;
 use App\Domain\VendingMachine\Purchase;
+use JsonSerializable;
 
-class UnderMaintenanceVendingMachineState extends VendingMachineState
+class UnderMaintenanceVendingMachineState extends VendingMachineState implements JsonSerializable
 {
     private $catalog;
     private $machineMoney;
@@ -26,10 +27,11 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState
     }
 
     public static function createWithMoneyAndCatalog(
-        Money $money,
-        Catalog $catalog
+        Money $machineMoney,
+        Catalog $catalog,
+        Money $userMoney = null
     ): UnderMaintenanceVendingMachineState {
-        return new self($money, $catalog);
+        return new self($machineMoney, $catalog);
     }
 
     /**
@@ -98,5 +100,13 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState
             $this->machineMoney,
             $this->catalog
         ));
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'machineMoney' => $this->machineMoney,
+            'catalog' => $this->catalog,
+        ];
     }
 }

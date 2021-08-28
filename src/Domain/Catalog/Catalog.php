@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace App\Domain\Catalog;
 
 use App\Domain\Catalog\Exception\ProductOutOfStockException;
+use JsonSerializable;
 
-class Catalog
+class Catalog implements JsonSerializable
 {
     private $stocks;
 
@@ -70,5 +71,18 @@ class Catalog
         if (!isset($this->stocks[$product->name()])) {
             throw new ProductOutOfStockException();
         }
+    }
+
+    public function jsonSerialize(): array
+    {
+        $temp = [];
+        foreach ($this->stocks as $stock) {
+            $temp[] = [
+                'productName' => $stock->product()->name(),
+                'price' => $stock->price(),
+                'quantity' => $stock->quantity(),
+            ];
+        }
+        return $temp;
     }
 }

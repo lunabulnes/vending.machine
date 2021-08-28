@@ -1,3 +1,4 @@
 vendor
 .phpunit*
 .idea
+vending_machine.JSON
