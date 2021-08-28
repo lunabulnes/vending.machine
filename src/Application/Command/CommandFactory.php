@@ -23,6 +23,8 @@ class CommandFactory
                 return new BuyCommand(new DummyVendingMachineRepository());
             case "GETCATALOG":
                 return new GetCatalogCommand(new DummyVendingMachineRepository());
+            case "STARTMAINTENANCE":
+                return new StartMaintenanceCommand(new DummyVendingMachineRepository());
         }
 
         throw new InvalidCommandException();
