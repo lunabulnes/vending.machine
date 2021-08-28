@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain;
+namespace App\Domain\VendingMachine;
 
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Money;

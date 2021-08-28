@@ -1,46 +1,59 @@
 <?php
 declare(strict_types = 1);
 
-namespace App\Domain;
+namespace App\Domain\VendingMachine;
 
 use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Exception\NotEnoughMoneyException;
 use App\Domain\Catalog\Exception\ProductOutOfStockException;
 use App\Domain\Catalog\Product;
-use App\Domain\Money\Exception\InvalidCoinException;
 use App\Domain\Money\Money;
 use App\Domain\Money\Coin;
+use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
 
 class VendingMachine
 {
     private $userMoney;
     private $machineMoney;
     private $catalog;
+    private $underMaintenance;
 
-    private function __construct(Money $userMoney, Money $machineMoney, Catalog $catalog)
+    private function __construct(Money $userMoney, Money $machineMoney, Catalog $catalog, $underMaintenance = false)
     {
         $this->userMoney = $userMoney;
         $this->machineMoney = $machineMoney;
         $this->catalog = $catalog;
+        $this->underMaintenance = $underMaintenance;
     }
 
-    public static function create()
+    public static function create(): VendingMachine
     {
         return new self(Money::createFromCoins(), Money::createFromCoins(), Catalog::create());
     }
 
-    public static function createWithCatalog(Catalog $catalog)
+    public static function createWithCatalog(Catalog $catalog): VendingMachine
     {
         return new self(Money::createFromCoins(), Money::createFromCoins(), $catalog);
     }
 
-    public static function createWithMoneyAndCatalog(Money $money, Catalog $catalog)
+    public static function createWithMoneyAndCatalog(Money $money, Catalog $catalog): VendingMachine
     {
         return new self(Money::createFromCoins(), $money, $catalog);
     }
 
+    public static function createWithMaintenanceState(bool $maintenance)
+    {
+        return new self(Money::createFromCoins(), Money::createFromCoins(), Catalog::create(), $maintenance);
+    }
+
+    /**
+     * @throws MachineOutOfServiceException
+     */
     public function addUserCoin(Coin $coin): void
     {
+        if ($this->underMaintenance) {
+            throw new MachineOutOfServiceException();
+        }
         $this->userMoney->addCoin($coin);
     }
 

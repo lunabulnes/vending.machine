@@ -6,11 +6,10 @@ use App\Domain\Catalog\Exception\ProductOutOfStockException;
 use App\Domain\Catalog\Product;
 use App\Domain\Catalog\Stock;
 use App\Domain\Money\Coin;
-use App\Domain\Money\Exception\InvalidCoinException;
-use App\Domain\Money\Exception\NotEnoughCoinsException;
 use App\Domain\Money\Money;
-use App\Domain\Purchase;
-use App\Domain\VendingMachine;
+use App\Domain\VendingMachine\Purchase;
+use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
+use App\Domain\VendingMachine\VendingMachine;
 use PHPUnit\Framework\TestCase;
 
 class VendingMachinetest extends TestCase
@@ -166,5 +165,13 @@ class VendingMachinetest extends TestCase
 
         $this->expectException(NotEnoughMoneyException::class);
         $vendingMachine->buy($product);
+    }
+
+    public function testUserCanNotAddCoinsToMachineWhileOutOfService()
+    {
+        $vendingMachine = VendingMachine::createWithMaintenanceState(true);
+
+        $this->expectException(MachineOutOfServiceException::class);
+        $vendingMachine->addUserCoin(Coin::create(25));
     }
 }
