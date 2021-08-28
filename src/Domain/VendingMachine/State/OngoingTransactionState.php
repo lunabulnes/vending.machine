@@ -62,7 +62,12 @@ class OngoingTransactionState extends VendingMachineState
 
     public function returnUserCoins(): array
     {
-        return $this->userMoney->returnCoins();
+        $coins = $this->userMoney->returnCoins();
+        $this->context->updateState(ReadyVendingMachineState::createWithMoneyAndCatalog(
+            $this->machineMoney,
+            $this->catalog
+        ));
+        return $coins;
     }
 
     public function getMachineMoney(): int
@@ -124,8 +129,13 @@ class OngoingTransactionState extends VendingMachineState
         throw new UnauthorizedActionException();
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        // TODO: Implement jsonSerialize() method.
+        return [
+            'class' => self::class,
+            'userMoney' => $this->userMoney,
+            'machineMoney' => $this->machineMoney,
+            'catalog' => $this->catalog,
+        ];
     }
 }

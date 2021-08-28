@@ -4,8 +4,6 @@ declare(strict_types = 1);
 namespace App\Domain\VendingMachine\State;
 
 use App\Domain\Catalog\Catalog;
-use App\Domain\Catalog\Exception\NotEnoughMoneyException;
-use App\Domain\Catalog\Exception\ProductOutOfStockException;
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Money;
 use App\Domain\Money\Coin;
@@ -51,6 +49,11 @@ class ReadyVendingMachineState extends VendingMachineState
     public function addUserCoin(Coin $coin): void
     {
         $this->userMoney->addCoin($coin);
+        $this->context->updateState(OngoingTransactionState::createWithMoneyAndCatalog(
+            $this->machineMoney,
+            $this->catalog,
+            $this->userMoney
+        ));
     }
 
     public function getUserMoney(): int
@@ -58,32 +61,26 @@ class ReadyVendingMachineState extends VendingMachineState
         return $this->userMoney->getTotalMoney();
     }
 
+
     public function getMachineMoney(): int
     {
         return $this->machineMoney->getTotalMoney();
     }
 
+    /**
+     * @throws UnauthorizedActionException
+     */
     public function returnUserCoins(): array
     {
-        return $this->userMoney->returnCoins();
+        throw new UnauthorizedActionException();
     }
 
     /**
-     * @throws NotEnoughMoneyException
-     * @throws ProductOutOfStockException
+     * @throws UnauthorizedActionException
      */
     public function buy(Product $product): Purchase
     {
-        $this->catalog->guardStockQuantity($product);
-        $productPrice = $this->catalog->getPriceFor($product);
-        $this->userMoney->guardHasEnoughMoney($productPrice);
-
-        $this->machineMoney->add($this->userMoney);
-        $change = $this->machineMoney->getChange($this->getUserMoney() - $productPrice);
-        $this->userMoney->resetMoney();
-        $this->catalog->decreaseStock($product);
-
-        return new Purchase($product, $change);
+        throw new UnauthorizedActionException();
     }
 
     /**

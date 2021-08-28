@@ -78,8 +78,16 @@ class VendingMachineContextTest extends TestCase
         $vendingMachineContext->startMaintenance();
     }
 
+    public function testItCanTransitionFromReadyToOngoingTransaction()
+    {
+        $initialState = ReadyVendingMachineState::create();
+        $vendingMachineContext = VendingMachineContext::createWithState($initialState);
 
-    public function testUserCanBuyProductThatExistInTheCatalog()
+        $vendingMachineContext->addUserCoin(Coin::create(25));
+        $this->assertEquals(25, $vendingMachineContext->getUserMoney());
+    }
+
+    public function testItCanTransitionFromOngoingTransactionToReady()
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
@@ -91,44 +99,6 @@ class VendingMachineContextTest extends TestCase
         $purchase = $vendingMachineContext->buy($product);
 
         $this->assertEquals(new Purchase($product), $purchase);
-    }
-
-    public function testUserCanNotBuyProductThatDoesNotExistInTheCatalog()
-    {
-        $product = Product::create('Juice');
-        $vendingMachineState = OngoingTransactionState::create();
-        $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
-
-        $vendingMachineContext->addUserCoin(Coin::create(100));
-
-        $this->expectException(ProductOutOfStockException::class);
-        $vendingMachineContext->buy($product);
-    }
-
-    public function testUserCanNotBuyProductIfQuantityIsZero()
-    {
-        $product = Product::create('Juice');
-        $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 0));
-        $vendingMachineState = OngoingTransactionState::createWithCatalog($catalog);
-        $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
-
-        $vendingMachineContext->addUserCoin(Coin::create(100));
-
-        $this->expectException(ProductOutOfStockException::class);
-        $vendingMachineContext->buy($product);
-    }
-
-    public function testUserCanNotBuyProductIfThereIsNotEnoughMoney()
-    {
-        $product = Product::create('Juice');
-        $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 10));
-        $vendingMachineState = OngoingTransactionState::createWithCatalog($catalog);
-        $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
-
-        $this->expectException(NotEnoughMoneyException::class);
-        $vendingMachineContext->buy($product);
     }
 
     public function testUserGetsProductAndChangeIfThereIsTooMuchMoney()
@@ -189,20 +159,5 @@ class VendingMachineContextTest extends TestCase
         $vendingMachineContext->buy($product);
 
         $this->assertEquals(100, $vendingMachineContext->getMachineMoney());
-    }
-
-    public function testMachineCanNotReturnChangeIfItDoesNotHaveTheProperCoins()
-    {
-        $product = Product::create('Water');
-        $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 65, 10));
-        $machineMoney = Money::createFromCoins([Coin::create(100)]);
-        $vendingMachineState = OngoingTransactionState::createWithMoneyAndCatalog($machineMoney, $catalog);
-        $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
-
-        $vendingMachineContext->addUserCoin(Coin::create(100));
-
-        $this->expectException(NotEnoughMoneyException::class);
-        $vendingMachineContext->buy($product);
     }
 }
