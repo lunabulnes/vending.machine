@@ -3,43 +3,111 @@ declare(strict_types = 1);
 
 namespace App\Domain\Money;
 
+use App\Domain\Catalog\Exception\NotEnoughMoneyException;
+use App\Domain\Money\Exception\InvalidCoinException;
+
 class Money
 {
-    private $coins;
+    private $groupedCoins;
 
     private function __construct(array $coins)
     {
-        $this->coins = $coins;
+        $this->groupedCoins = [];
+        foreach ($coins as $coin) {
+            $this->addCoin($coin);
+        }
     }
 
-    public static function create(array $coins = [])
+    public static function createFromCoins(array $coins = [])
     {
+        return new self($coins);
+    }
+
+    /**
+     * @throws InvalidCoinException
+     */
+    public static function createFromTotal(int $total): Money
+    {
+        $coins = [];
+        while ($total > 0) {
+            $newCoin = Coin::createBiggest($total);
+            $total -= $newCoin->value();
+            $coins[] = $newCoin;
+        }
+
         return new self($coins);
     }
 
     public function addCoin(Coin $coin): void
     {
-        $this->coins[] = $coin;
+        $this->groupedCoins[$coin->value()][] = $coin;
     }
 
-    public function getTotalMoney(): float
+    public function getTotalMoney(): int
     {
         $total = 0;
-        foreach ($this->coins as $coin) {
-            $total += $coin->value();
+        foreach ($this->groupedCoins as $coinType => $coins) {
+            $total += $coinType * count($coins);
         }
+
         return $total;
     }
 
     public function returnCoins(): array
     {
-        $coins = $this->coins;
+        $TotalCoins = [];
+        foreach ($this->groupedCoins as $coinType => $coins) {
+            $TotalCoins = array_merge($TotalCoins, $coins);
+        }
         $this->resetMoney();
-        return $coins;
+        return $TotalCoins;
     }
 
     public function resetMoney(): void
     {
-        $this->coins = [];
+        $this->groupedCoins = [];
+    }
+
+    /**
+     * @throws NotEnoughMoneyException
+     */
+    public function guardHasEnoughMoney(int $amount): void
+    {
+        if ($this->getTotalMoney() < $amount) {
+            throw new NotEnoughMoneyException();
+        }
+    }
+
+    public function add(Money $money): void
+    {
+        foreach ($money->groupedCoins as $coinType => $coins) {
+            $this->groupedCoins[$coinType] = array_merge($this->groupedCoins[$coinType] ?? [], $coins);
+        }
+    }
+
+    /**
+     * @throws NotEnoughMoneyException
+     */
+    public function getChange(int $amount): ?Money
+    {
+        if ($amount <= 0) {
+            return null;
+        }
+
+        $changeCoins = [];
+        foreach ($this->groupedCoins as $coinType => $coins) {
+            if ($coinType <= $amount) {
+                while (count($coins) > 0 && $amount > 0) {
+                    $changeCoins[] = array_shift($coins);
+                    $amount -= $coinType;
+                }
+            }
+        }
+
+        if ($amount > 0) {
+            throw new NotEnoughMoneyException();
+        }
+
+        return Money::createFromCoins($changeCoins);
     }
 }

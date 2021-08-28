@@ -7,20 +7,20 @@ use App\Domain\Money\Exception\InvalidCoinException;
 
 class Coin
 {
-    private const FIVE_CENTS = 0.05;
-    private const TEN_CENTS = 0.10;
-    private const TWENTY_FIVE_CENTS = 0.25;
-    private const ONE_UNIT = 1;
+    private const ONE_UNIT = 100;
+    private const TWENTY_FIVE_CENTS = 25;
+    private const TEN_CENTS = 10;
+    private const FIVE_CENTS = 5;
     private const VALID_VALUES = [
-        self::FIVE_CENTS,
-        self::TEN_CENTS,
+        self::ONE_UNIT,
         self::TWENTY_FIVE_CENTS,
-        self::ONE_UNIT
+        self::TEN_CENTS,
+        self::FIVE_CENTS
     ];
 
     private $value;
 
-    private function __construct(float $value)
+    private function __construct(int $value)
     {
         $this->value = $value;
     }
@@ -28,7 +28,7 @@ class Coin
     /**
      * @throws InvalidCoinException
      */
-    public static function create(float $value): Coin
+    public static function create(int $value): Coin
     {
         if (!self::isValid($value)) {
             throw new InvalidCoinException();
@@ -36,12 +36,26 @@ class Coin
         return new self($value);
     }
 
-    private static function isValid(float $value): bool
+    /**
+     * @throws InvalidCoinException
+     */
+    public static function createBiggest(int $money): Coin
+    {
+        foreach (self::VALID_VALUES as $validValue) {
+            if ($validValue <= $money) {
+                return self::create($validValue);
+            }
+        }
+
+        throw new InvalidCoinException();
+    }
+
+    private static function isValid(int $value): bool
     {
         return in_array($value, self::VALID_VALUES);
     }
 
-    public function value(): float
+    public function value(): int
     {
         return $this->value;
     }

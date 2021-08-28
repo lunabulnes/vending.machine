@@ -27,21 +27,39 @@ class Catalog
     /**
      * @throws ProductOutOfStockException
      */
-    public function getPriceFor(Product $product): float
+    public function getPriceFor(Product $product): int
     {
-        $this->guardProductExistsInCatalog($product);
-        return $this->stocks[$product->name()]->price();
+        $stock = $this->getStockByProduct($product);
+        return $stock->price();
     }
 
     /**
      * @throws ProductOutOfStockException
      */
-    public function guardQuantity(Product $product): void
+    public function guardStockQuantity(Product $product): void
     {
-        $this->guardProductExistsInCatalog($product);
-        if ($this->stocks[$product->name()]->quantity() === 0) {
+        $stock = $this->getStockByProduct($product);
+        if ($stock->quantity() === 0) {
             throw new ProductOutOfStockException();
         }
+    }
+
+    /**
+     * @throws ProductOutOfStockException
+     */
+    public function decreaseStock(Product $product)
+    {
+        $stock = $this->getStockByProduct($product);
+        $stock->decreaseQuantity();
+    }
+
+    /**
+     * @throws ProductOutOfStockException
+     */
+    private function getStockByProduct(Product $product): Stock
+    {
+        $this->guardProductExistsInCatalog($product);
+        return $this->stocks[$product->name()];
     }
 
     /**

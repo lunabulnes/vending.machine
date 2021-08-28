@@ -7,28 +7,36 @@ use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Exception\NotEnoughMoneyException;
 use App\Domain\Catalog\Exception\ProductOutOfStockException;
 use App\Domain\Catalog\Product;
+use App\Domain\Money\Exception\InvalidCoinException;
 use App\Domain\Money\Money;
 use App\Domain\Money\Coin;
 
 class VendingMachine
 {
     private $userMoney;
+    private $machineMoney;
     private $catalog;
 
-    private function __construct(Money $userMoney, Catalog $catalog)
+    private function __construct(Money $userMoney, Money $machineMoney, Catalog $catalog)
     {
         $this->userMoney = $userMoney;
+        $this->machineMoney = $machineMoney;
         $this->catalog = $catalog;
     }
 
     public static function create()
     {
-        return new self(Money::create(), Catalog::create());
+        return new self(Money::createFromCoins(), Money::createFromCoins(), Catalog::create());
     }
 
     public static function createWithCatalog(Catalog $catalog)
     {
-        return new self(Money::create(), $catalog);
+        return new self(Money::createFromCoins(), Money::createFromCoins(), $catalog);
+    }
+
+    public static function createWithMoneyAndCatalog(Money $money, Catalog $catalog)
+    {
+        return new self(Money::createFromCoins(), $money, $catalog);
     }
 
     public function addUserCoin(Coin $coin): void
@@ -36,9 +44,14 @@ class VendingMachine
         $this->userMoney->addCoin($coin);
     }
 
-    public function getAvailableMoney(): float
+    public function getUserMoney(): int
     {
         return $this->userMoney->getTotalMoney();
+    }
+
+    public function getMachineMoney(): int
+    {
+        return $this->machineMoney->getTotalMoney();
     }
 
     public function returnUserCoins(): array
@@ -50,14 +63,17 @@ class VendingMachine
      * @throws NotEnoughMoneyException
      * @throws ProductOutOfStockException
      */
-    public function buy(Product $product): Product
+    public function buy(Product $product): Purchase
     {
-        $this->catalog->guardQuantity($product);
+        $this->catalog->guardStockQuantity($product);
+        $productPrice = $this->catalog->getPriceFor($product);
+        $this->userMoney->guardHasEnoughMoney($productPrice);
 
-        if ($this->getAvailableMoney() < $this->catalog->getPriceFor($product)) {
-            throw new NotEnoughMoneyException();
-        }
+        $this->machineMoney->add($this->userMoney);
+        $change = $this->machineMoney->getChange($this->getUserMoney() - $productPrice);
+        $this->userMoney->resetMoney();
+        $this->catalog->decreaseStock($product);
 
-        return $product;
+        return new Purchase($product, $change);
     }
 }
