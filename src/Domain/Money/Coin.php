@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace App\Domain\Money;
 
 use App\Domain\Money\Exception\InvalidCoinException;
-use http\Encoding\Stream\Inflate;
 use JsonSerializable;
 
 class Coin implements JsonSerializable

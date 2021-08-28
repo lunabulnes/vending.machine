@@ -19,6 +19,8 @@ class CommandFactory
                 return new ReturnCoinsCommand(new DummyVendingMachineRepository());
             case "CHECKUSERTOTAL":
                 return new CheckUserTotalCommand(new DummyVendingMachineRepository());
+            case "BUY":
+                return new BuyCommand(new DummyVendingMachineRepository());
         }
 
         throw new InvalidCommandException();

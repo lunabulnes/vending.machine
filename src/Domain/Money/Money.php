@@ -108,6 +108,14 @@ class Money implements JsonSerializable
         return $change;
     }
 
+    public function getCoins() {
+        $coins = [];
+        foreach ($this->groupedCoins as $coinType => $coins) {
+            $this->groupedCoins[$coinType] = array_merge($this->groupedCoins[$coinType] ?? [], $coins);
+        }
+        return $coins;
+    }
+
     public function jsonSerialize(): array
     {
         $temp = [];
