@@ -93,4 +93,20 @@ class ReadyVendingMachineState extends VendingMachineState
     {
         throw new UnauthorizedActionException();
     }
+
+    public function startMaintenance(): void
+    {
+        $this->context->updateState(UnderMaintenanceVendingMachineState::createWithMoneyAndCatalog(
+            $this->machineMoney,
+            $this->catalog
+        ));
+    }
+
+    /**
+     * @throws UnauthorizedActionException
+     */
+    public function stopMaintenance(): void
+    {
+        throw new UnauthorizedActionException();
+    }
 }

@@ -69,6 +69,16 @@ class Money
         }
     }
 
+    public function subtract(Money $money): void
+    {
+        foreach ($money->groupedCoins as $coinType => $coins) {
+            $this->groupedCoins[$coinType] = array_slice($this->groupedCoins[$coinType], count($coins));
+            if (count($this->groupedCoins[$coinType]) === 0) {
+                unset($this->groupedCoins[$coinType]);
+            }
+        }
+    }
+
     /**
      * @throws NotEnoughMoneyException
      */
@@ -92,6 +102,8 @@ class Money
             throw new NotEnoughMoneyException();
         }
 
-        return Money::createFromCoins($changeCoins);
+        $change = Money::createFromCoins($changeCoins);
+        $this->subtract($change);
+        return $change;
     }
 }

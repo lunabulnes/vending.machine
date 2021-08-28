@@ -7,7 +7,7 @@ use App\Domain\VendingMachine\VendingMachineInterface;
 
 abstract class VendingMachineState implements VendingMachineInterface
 {
-    private $context;
+    protected $context;
 
     public function setContext(VendingMachineContext $context)
     {

@@ -15,4 +15,6 @@ interface VendingMachineInterface
     public function buy(Product $product): Purchase;
     public function refillCatalog(Catalog $catalog): void;
     public function refillChange(array $coins): void;
+    public function startMaintenance(): void;
+    public function stopMaintenance(): void;
 }

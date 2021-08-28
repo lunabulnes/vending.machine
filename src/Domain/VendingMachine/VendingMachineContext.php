@@ -68,4 +68,14 @@ class VendingMachineContext implements VendingMachineInterface
     {
         $this->vendingMachineState->refillChange($coins);
     }
+
+    public function startMaintenance(): void
+    {
+        $this->vendingMachineState->startMaintenance();
+    }
+
+    public function stopMaintenance(): void
+    {
+        $this->vendingMachineState->stopMaintenance();
+    }
 }

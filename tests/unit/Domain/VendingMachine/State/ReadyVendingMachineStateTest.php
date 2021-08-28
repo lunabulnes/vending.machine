@@ -96,7 +96,7 @@ class VendingMachinetest extends TestCase
         $vendingMachine->buy($product);
     }
 
-    public function testUserGetsProductAndChangeIfThereWasTooMuchMoney()
+    public function testUserGetsProductAndChangeIfThereIsTooMuchMoney()
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
