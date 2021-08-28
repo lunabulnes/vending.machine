@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Application\Command;
+namespace App\Application\UseCase;
 
+use App\Domain\Money\Coin;
+use App\Domain\Money\Exception\InvalidCoinException;
 use App\Domain\VendingMachine\VendingMachineRepository;
 
-class ReturnCoinsCommand implements Command
+class AddCoin
 {
     private $vendingMachineRepository;
 
@@ -13,12 +15,13 @@ class ReturnCoinsCommand implements Command
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute(array $args)
+    /**
+     * @throws InvalidCoinException
+     */
+    public function execute(int $value)
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        $coins = $vendingMachine->returnUserCoins();
+        $vendingMachine->addUserCoin(Coin::create($value));
         $this->vendingMachineRepository->save($vendingMachine);
-
-        return json_encode($coins);
     }
 }

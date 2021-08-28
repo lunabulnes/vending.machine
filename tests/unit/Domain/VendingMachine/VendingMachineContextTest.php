@@ -91,7 +91,7 @@ class VendingMachineContextTest extends TestCase
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 10));
+        $catalog->addStock(Stock::create($product, 100, 10));
         $vendingMachineState = OngoingTransactionState::createWithCatalog($catalog);
         $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
 
@@ -121,7 +121,7 @@ class VendingMachineContextTest extends TestCase
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 10));
+        $catalog->addStock(Stock::create($product, 100, 10));
         $vendingMachineState = OngoingTransactionState::createWithCatalog($catalog);
         $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
 
@@ -136,7 +136,7 @@ class VendingMachineContextTest extends TestCase
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 10));
+        $catalog->addStock(Stock::create($product, 100, 10));
         $vendingMachineState = OngoingTransactionState::createWithCatalog($catalog);
         $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
 
@@ -150,7 +150,7 @@ class VendingMachineContextTest extends TestCase
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 1));
+        $catalog->addStock(Stock::create($product, 100, 1));
         $vendingMachineState = OngoingTransactionState::createWithCatalog($catalog);
         $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
 
@@ -166,7 +166,7 @@ class VendingMachineContextTest extends TestCase
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 1));
+        $catalog->addStock(Stock::create($product, 100, 1));
         $vendingMachineState = OngoingTransactionState::createWithCatalog($catalog);
         $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
 
@@ -175,5 +175,21 @@ class VendingMachineContextTest extends TestCase
         $vendingMachineContext->buy($product);
 
         $this->assertEquals(100, $vendingMachineContext->getMachineMoney());
+    }
+
+    public function testUserCanNotBuyProductIfQuantityIsZero()
+    {
+        $product = Product::create('Juice');
+        $catalog = Catalog::create();
+        $catalog->addStock(Stock::create($product, 100, 1));
+        $vendingMachineState = OngoingTransactionState::createWithCatalog($catalog);
+        $vendingMachineContext = VendingMachineContext::createWithState($vendingMachineState);
+
+        $vendingMachineContext->addUserCoin(Coin::create(100));
+        $vendingMachineContext->buy($product);
+        $vendingMachineContext->addUserCoin(Coin::create(100));
+
+        $this->expectException(ProductOutOfStockException::class);
+        $vendingMachineContext->buy($product);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Application\Command\CommandFactory;
+use App\Infrastructure\Cli\CommandFactory;
 
 require "vendor/autoload.php";
 
@@ -10,7 +10,7 @@ $commandName = strtoupper(array_shift($argv));
 try {
     $arguments = $argv ?? [];
     $command = CommandFactory::createByName($commandName);
-    $response = $command->execute($arguments);
+    $response = $command($arguments);
     echo $response . "\n";
 } catch (Exception $exception) {
     echo $exception->getMessage() . "\n";

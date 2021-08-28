@@ -20,7 +20,7 @@ class Catalog implements JsonSerializable
         return new self();
     }
 
-    public function refillStock(Stock $stock): void
+    public function addStock(Stock $stock): void
     {
         $this->stocks[$stock->product()->name()] = $stock;
     }

@@ -4,6 +4,7 @@ namespace App\Domain\VendingMachine\State;
 
 use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
+use App\Domain\Catalog\Stock;
 use App\Domain\Money\Coin;
 use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
@@ -76,14 +77,14 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState implements
         throw new MachineOutOfServiceException();
     }
 
-    public function refillCatalog(Catalog $catalog): void
+    public function addStock(Stock $stock): void
     {
-       $this->catalog = $catalog;
+       $this->catalog->addStock($stock);
     }
 
-    public function refillChange(array $coins): void
+    public function refillChange(Money $change): void
     {
-        $this->machineMoney = Money::createFromCoins($coins);
+        $this->machineMoney->add($change);
     }
 
     public function catalog(): Catalog

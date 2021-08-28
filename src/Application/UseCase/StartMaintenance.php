@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Application\Command;
+namespace App\Application\UseCase;
 
-use App\Domain\Money\Coin;
 use App\Domain\VendingMachine\VendingMachineRepository;
 
-class AddCoinCommand implements Command
+class StartMaintenance
 {
     private $vendingMachineRepository;
 
@@ -14,10 +13,10 @@ class AddCoinCommand implements Command
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute(array $args)
+    public function execute()
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        $vendingMachine->addUserCoin(Coin::create($args[0]));
+        $vendingMachine->startMaintenance();
         $this->vendingMachineRepository->save($vendingMachine);
     }
 }

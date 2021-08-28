@@ -5,6 +5,7 @@ namespace App\Domain\VendingMachine\State;
 
 use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
+use App\Domain\Catalog\Stock;
 use App\Domain\Money\Money;
 use App\Domain\Money\Coin;
 use App\Domain\VendingMachine\Exception\UnauthorizedActionException;
@@ -86,7 +87,7 @@ class ReadyVendingMachineState extends VendingMachineState
     /**
      * @throws UnauthorizedActionException
      */
-    public function refillCatalog(Catalog $catalog): void
+    public function addStock(Stock $stock): void
     {
         throw new UnauthorizedActionException();
     }
@@ -94,7 +95,7 @@ class ReadyVendingMachineState extends VendingMachineState
     /**
      * @throws UnauthorizedActionException
      */
-    public function refillChange(array $coins): void
+    public function refillChange(Money $change): void
     {
         throw new UnauthorizedActionException();
     }

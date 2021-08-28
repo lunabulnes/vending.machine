@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Application\Command;
+namespace App\Application\UseCase;
 
 use App\Domain\VendingMachine\VendingMachineRepository;
 
-class CheckUserTotalCommand implements Command
+class GetCatalog
 {
     private $vendingMachineRepository;
 
@@ -13,9 +13,10 @@ class CheckUserTotalCommand implements Command
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute(array $args)
+    public function execute()
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        return $vendingMachine->getUserMoney();
+        return $vendingMachine->getCatalog();
     }
+
 }

@@ -36,24 +36,11 @@ class OngoingTransactionStateTest extends TestCase
         $vendingMachine->buy($product);
     }
 
-    public function testUserCanNotBuyProductIfQuantityIsZero()
-    {
-        $product = Product::create('Juice');
-        $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 0));
-        $vendingMachine = OngoingTransactionState::createWithCatalog($catalog);
-
-        $vendingMachine->addUserCoin(Coin::create(100));
-
-        $this->expectException(ProductOutOfStockException::class);
-        $vendingMachine->buy($product);
-    }
-
     public function testUserCanNotBuyProductIfThereIsNotEnoughMoney()
     {
         $product = Product::create('Juice');
         $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 10));
+        $catalog->addStock(Stock::create($product, 100, 10));
         $vendingMachine = OngoingTransactionState::createWithCatalog($catalog);
 
         $this->expectException(NotEnoughMoneyException::class);
@@ -64,7 +51,7 @@ class OngoingTransactionStateTest extends TestCase
     {
         $product = Product::create('Water');
         $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 65, 10));
+        $catalog->addStock(Stock::create($product, 65, 10));
         $machineMoney = Money::createFromCoins([Coin::create(100)]);
         $vendingMachine = OngoingTransactionState::createWithMoneyAndCatalog($machineMoney, $catalog);
 

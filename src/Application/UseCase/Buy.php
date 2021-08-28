@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Application\Command;
+namespace App\Application\UseCase;
 
 use App\Domain\Catalog\Product;
 use App\Domain\VendingMachine\VendingMachineRepository;
 
-class BuyCommand implements Command
+class Buy
 {
     private $vendingMachineRepository;
 
@@ -14,12 +14,12 @@ class BuyCommand implements Command
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute(array $args)
+    public function execute(string $productName)
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        $purchase = $vendingMachine->buy(Product::create($args[0]));
+        $purchase = $vendingMachine->buy(Product::create($productName));
         $this->vendingMachineRepository->save($vendingMachine);
 
-        return json_encode($purchase);
+        return $purchase;
     }
 }

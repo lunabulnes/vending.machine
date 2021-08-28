@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Application\Command;
+namespace App\Application\UseCase;
 
 use App\Domain\VendingMachine\VendingMachineRepository;
 
-class GetCatalogCommand implements Command
+class ReturnCoins
 {
     private $vendingMachineRepository;
 
@@ -13,9 +13,12 @@ class GetCatalogCommand implements Command
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute(array $args)
+    public function execute()
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        return json_encode($vendingMachine->getCatalog());
+        $coins = $vendingMachine->returnUserCoins();
+        $this->vendingMachineRepository->save($vendingMachine);
+
+        return $coins;
     }
 }

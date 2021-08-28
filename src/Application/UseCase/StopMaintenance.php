@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Application\Command;
+namespace App\Application\UseCase;
 
 use App\Domain\VendingMachine\VendingMachineRepository;
 
-class StartMaintenanceCommand implements Command
+class StopMaintenance
 {
     private $vendingMachineRepository;
 
@@ -13,10 +13,10 @@ class StartMaintenanceCommand implements Command
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute(array $args)
+    public function execute()
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        $vendingMachine->startMaintenance();
+        $vendingMachine->stopMaintenance();
         $this->vendingMachineRepository->save($vendingMachine);
     }
 }

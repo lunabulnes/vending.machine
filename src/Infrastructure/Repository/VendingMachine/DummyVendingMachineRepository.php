@@ -50,8 +50,8 @@ class DummyVendingMachineRepository implements VendingMachineRepository
 
         foreach ($jsonCatalog as $catalogItem) {
             $product = Product::create($catalogItem['productName']);
-            $stock = new Stock($product, $catalogItem['price'], $catalogItem['quantity']);
-            $catalog->refillStock($stock);
+            $stock = Stock::create($product, $catalogItem['price'], $catalogItem['quantity']);
+            $catalog->addStock($stock);
         }
         return $catalog;
     }

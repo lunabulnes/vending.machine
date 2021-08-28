@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Application\Command;
+namespace App\Application\UseCase;
 
 use App\Domain\VendingMachine\VendingMachineRepository;
 
-class StopMaintenanceCommand implements Command
+class GetUserTotal
 {
     private $vendingMachineRepository;
 
@@ -13,10 +13,9 @@ class StopMaintenanceCommand implements Command
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute(array $args)
+    public function execute()
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        $vendingMachine->stopMaintenance();
-        $this->vendingMachineRepository->save($vendingMachine);
+        return $vendingMachine->getUserMoney();
     }
 }

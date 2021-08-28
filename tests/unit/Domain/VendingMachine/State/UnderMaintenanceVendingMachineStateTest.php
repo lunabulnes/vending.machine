@@ -4,6 +4,7 @@ use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
 use App\Domain\Catalog\Stock;
 use App\Domain\Money\Coin;
+use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
 use App\Domain\VendingMachine\State\UnderMaintenanceVendingMachineState;
 use PHPUnit\Framework\TestCase;
@@ -20,10 +21,11 @@ class UnderMaintenanceVendingMachineStateTest extends TestCase
     {
         $vendingMachine = UnderMaintenanceVendingMachineState::create();
         $product = Product::create('Juice');
+        $stock = Stock::create($product, 100, 10);
         $catalog = Catalog::create();
-        $catalog->refillStock(new Stock($product, 100, 10));
+        $catalog->addStock($stock);
 
-        $vendingMachine->refillCatalog($catalog);
+        $vendingMachine->addStock($stock);
         $machineCatalog = $vendingMachine->catalog();
 
         $this->assertEquals($catalog, $machineCatalog);
@@ -33,7 +35,7 @@ class UnderMaintenanceVendingMachineStateTest extends TestCase
     {
         $vendingMachine = UnderMaintenanceVendingMachineState::create();
         $coins = [Coin::create(100), Coin::create(25), Coin::create(100)];
-        $vendingMachine->refillChange($coins);
+        $vendingMachine->refillChange(Money::createFromCoins($coins));
 
         $this->assertEquals(225, $vendingMachine->getMachineMoney());
 
