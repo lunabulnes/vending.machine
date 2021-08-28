@@ -2,6 +2,7 @@
 
 namespace App\Domain\VendingMachine;
 
+use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Coin;
 use App\Domain\VendingMachine\State\ReadyVendingMachineState;
@@ -56,5 +57,15 @@ class VendingMachineContext implements VendingMachineInterface
     public function buy(Product $product): Purchase
     {
         return $this->vendingMachineState->buy($product);
+    }
+
+    public function refillCatalog(Catalog $catalog): void
+    {
+        $this->vendingMachineState->refillCatalog($catalog);
+    }
+
+    public function refillChange(array $coins): void
+    {
+        $this->vendingMachineState->refillChange($coins);
     }
 }

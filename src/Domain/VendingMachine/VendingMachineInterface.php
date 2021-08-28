@@ -2,6 +2,7 @@
 
 namespace App\Domain\VendingMachine;
 
+use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Coin;
 
@@ -12,4 +13,6 @@ interface VendingMachineInterface
     public function returnUserCoins(): array;
     public function getMachineMoney(): int;
     public function buy(Product $product): Purchase;
+    public function refillCatalog(Catalog $catalog): void;
+    public function refillChange(array $coins): void;
 }

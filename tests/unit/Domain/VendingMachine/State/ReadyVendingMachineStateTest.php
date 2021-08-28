@@ -8,13 +8,12 @@ use App\Domain\Catalog\Stock;
 use App\Domain\Money\Coin;
 use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Purchase;
-use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
 use App\Domain\VendingMachine\State\ReadyVendingMachineState;
 use PHPUnit\Framework\TestCase;
 
 class VendingMachinetest extends TestCase
 {
-    public function testVendingMachineCanBeCreated()
+    public function testReadyVendingMachineCanBeCreated()
     {
         $vendingMachine = ReadyVendingMachineState::create();
         $this->assertTrue($vendingMachine instanceof ReadyVendingMachineState);

@@ -9,6 +9,7 @@ use App\Domain\Catalog\Exception\ProductOutOfStockException;
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Money;
 use App\Domain\Money\Coin;
+use App\Domain\VendingMachine\Exception\UnauthorizedActionException;
 use App\Domain\VendingMachine\Purchase;
 
 class ReadyVendingMachineState extends VendingMachineState
@@ -75,5 +76,21 @@ class ReadyVendingMachineState extends VendingMachineState
         $this->catalog->decreaseStock($product);
 
         return new Purchase($product, $change);
+    }
+
+    /**
+     * @throws UnauthorizedActionException
+     */
+    public function refillCatalog(Catalog $catalog): void
+    {
+        throw new UnauthorizedActionException();
+    }
+
+    /**
+     * @throws UnauthorizedActionException
+     */
+    public function refillChange(array $coins): void
+    {
+        throw new UnauthorizedActionException();
     }
 }

@@ -2,18 +2,25 @@
 
 namespace App\Domain\VendingMachine\State;
 
+use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
 use App\Domain\Money\Coin;
+use App\Domain\Money\Money;
 use App\Domain\VendingMachine\Exception\MachineOutOfServiceException;
 use App\Domain\VendingMachine\Purchase;
 
 class UnderMaintenanceVendingMachineState extends VendingMachineState
 {
-    private function __construct(){}
+    private $catalog;
+    private $machineMoney;
+
+    private function __construct(Money $machineMoney){
+        $this->machineMoney = $machineMoney;
+    }
 
     public static function create()
     {
-        return new self();
+        return new self(Money::createFromCoins());
     }
 
     /**
@@ -40,12 +47,9 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState
         throw new MachineOutOfServiceException();
     }
 
-    /**
-     * @throws MachineOutOfServiceException
-     */
     public function getMachineMoney(): int
     {
-        throw new MachineOutOfServiceException();
+        return $this->machineMoney->getTotalMoney();
     }
 
     /**
@@ -54,5 +58,20 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState
     public function buy(Product $product): Purchase
     {
         throw new MachineOutOfServiceException();
+    }
+
+    public function refillCatalog(Catalog $catalog): void
+    {
+       $this->catalog = $catalog;
+    }
+
+    public function refillChange(array $coins): void
+    {
+        $this->machineMoney = Money::createFromCoins($coins);
+    }
+
+    public function catalog(): Catalog
+    {
+        return $this->catalog;
     }
 }
