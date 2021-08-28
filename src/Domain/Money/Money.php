@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace App\Domain\Money;
 
 use App\Domain\Catalog\Exception\NotEnoughMoneyException;
-use App\Domain\Money\Exception\InvalidCoinException;
 
 class Money
 {
@@ -20,21 +19,6 @@ class Money
 
     public static function createFromCoins(array $coins = [])
     {
-        return new self($coins);
-    }
-
-    /**
-     * @throws InvalidCoinException
-     */
-    public static function createFromTotal(int $total): Money
-    {
-        $coins = [];
-        while ($total > 0) {
-            $newCoin = Coin::createBiggest($total);
-            $total -= $newCoin->value();
-            $coins[] = $newCoin;
-        }
-
         return new self($coins);
     }
 

@@ -36,20 +36,6 @@ class Coin
         return new self($value);
     }
 
-    /**
-     * @throws InvalidCoinException
-     */
-    public static function createBiggest(int $money): Coin
-    {
-        foreach (self::VALID_VALUES as $validValue) {
-            if ($validValue <= $money) {
-                return self::create($validValue);
-            }
-        }
-
-        throw new InvalidCoinException();
-    }
-
     private static function isValid(int $value): bool
     {
         return in_array($value, self::VALID_VALUES);
