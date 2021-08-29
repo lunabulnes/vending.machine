@@ -1,7 +1,6 @@
 <?php
 
 use App\Domain\Catalog\Catalog;
-use App\Domain\Catalog\Exception\NotEnoughMoneyException;
 use App\Domain\Catalog\Exception\ProductOutOfStockException;
 use App\Domain\Catalog\Product;
 use App\Domain\Catalog\Stock;
