@@ -9,7 +9,7 @@ use App\Infrastructure\Cli\Exception\MissingArgumentException;
 
 class AddCoinCommand implements Command
 {
-    private $addCoin;
+    private AddCoin $addCoin;
 
     public function __construct(AddCoin $addCoin)
     {
@@ -17,14 +17,14 @@ class AddCoinCommand implements Command
     }
 
     /**
-     * @throws MissingArgumentException
      * @throws InvalidCoinException
+     * @throws MissingArgumentException
      */
-    public function __invoke(array $args)
+    public function __invoke(array $args): void
     {
         if (!isset($args[0]) || !intval($args[0])) {
             throw new MissingArgumentException('value');
         }
-        $this->addCoin->execute($args[0]);
+        $this->addCoin->execute(intval($args[0]));
     }
 }

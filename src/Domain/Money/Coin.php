@@ -19,7 +19,7 @@ class Coin implements JsonSerializable
         self::FIVE_CENTS
     ];
 
-    private $value;
+    private int $value;
 
     private function __construct(int $value)
     {

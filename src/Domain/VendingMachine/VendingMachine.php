@@ -18,6 +18,9 @@ interface VendingMachine extends JsonSerializable
 
     public function getUserMoney(): int;
 
+    /**
+     * @return array<Coin>
+     */
     public function returnUserCoins(): array;
 
     public function getMachineMoney(): int;

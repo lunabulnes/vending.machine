@@ -7,14 +7,14 @@ use App\Infrastructure\Cli\Command;
 
 class StartMaintenanceCommand implements Command
 {
-    private $startMaintenance;
+    private StartMaintenance $startMaintenance;
 
     public function __construct(StartMaintenance $startMaintenance)
     {
         $this->startMaintenance = $startMaintenance;
     }
 
-    public function __invoke(array $args)
+    public function __invoke(array $args): void
     {
         $this->startMaintenance->execute();
     }

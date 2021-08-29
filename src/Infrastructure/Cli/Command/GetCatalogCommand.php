@@ -7,14 +7,14 @@ use App\Infrastructure\Cli\Command;
 
 class GetCatalogCommand implements Command
 {
-    private $getCatalog;
+    private GetCatalog $getCatalog;
 
     public function __construct(GetCatalog $getCatalog)
     {
         $this->getCatalog = $getCatalog;
     }
 
-    public function __invoke(array $args)
+    public function __invoke(array $args): string
     {
         return json_encode($this->getCatalog->execute());
     }

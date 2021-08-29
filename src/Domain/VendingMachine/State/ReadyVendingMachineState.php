@@ -13,9 +13,9 @@ use App\Domain\VendingMachine\Purchase\Purchase;
 
 class ReadyVendingMachineState extends VendingMachineState
 {
-    private $userMoney;
-    private $machineMoney;
-    private $catalog;
+    private Money $userMoney;
+    private Money $machineMoney;
+    private Catalog $catalog;
 
     private function __construct(Money $userMoney, Money $machineMoney, Catalog $catalog)
     {
@@ -116,6 +116,9 @@ class ReadyVendingMachineState extends VendingMachineState
         throw new UnauthorizedActionException();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array
     {
         return [

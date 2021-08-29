@@ -2,18 +2,22 @@
 
 namespace App\Application\UseCase;
 
+use App\Domain\Money\Coin;
 use App\Domain\VendingMachine\VendingMachineRepository;
 
 class ReturnCoins
 {
-    private $vendingMachineRepository;
+    private VendingMachineRepository $vendingMachineRepository;
 
     public function __construct(VendingMachineRepository $vendingMachineRepository)
     {
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute()
+    /**
+     * @return array<Coin>
+     */
+    public function execute(): array
     {
         $vendingMachine = $this->vendingMachineRepository->get();
         $coins = $vendingMachine->returnUserCoins();

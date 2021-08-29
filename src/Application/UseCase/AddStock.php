@@ -11,7 +11,7 @@ use App\Domain\VendingMachine\VendingMachineRepository;
 
 class AddStock
 {
-    private $vendingMachineRepository;
+    private VendingMachineRepository $vendingMachineRepository;
 
     public function __construct(VendingMachineRepository $vendingMachineRepository)
     {
@@ -23,7 +23,7 @@ class AddStock
      * @throws InvalidProductException
      * @throws InvalidQuantityException
      */
-    public function execute(string $productName, $price, $quantity): void
+    public function execute(string $productName, int $price, int $quantity): void
     {
         $vendingMachine = $this->vendingMachineRepository->get();
         $stock = Stock::create(Product::create($productName), $price, $quantity);

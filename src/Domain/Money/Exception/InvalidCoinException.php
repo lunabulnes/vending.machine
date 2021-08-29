@@ -6,5 +6,6 @@ use Exception;
 
 class InvalidCoinException extends Exception
 {
+    /** @var string $message */
     protected $message = 'INVALID_COIN';
 }

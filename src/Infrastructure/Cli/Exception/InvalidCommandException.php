@@ -6,5 +6,6 @@ use Exception;
 
 class InvalidCommandException extends Exception
 {
+    /** @var string $message */
     protected $message = "INVALID_COMMAND_EXCEPTION";
 }

@@ -9,9 +9,9 @@ class Stock
 {
     private const INCREMENT = 1;
 
-    private $product;
-    private $price;
-    private $quantity;
+    private Product $product;
+    private int $price;
+    private int $quantity;
 
     private function __construct(Product $product, int $price, int $quantity)
     {
@@ -24,7 +24,7 @@ class Stock
      * @throws InvalidPriceException
      * @throws InvalidQuantityException
      */
-    public static function create(Product $product, int $price, int $quantity)
+    public static function create(Product $product, int $price, int $quantity): Stock
     {
         self::guardPrice($price);
         self::guardQuantity($quantity);
@@ -64,7 +64,7 @@ class Stock
     /**
      * @throws InvalidQuantityException
      */
-    private static function guardQuantity(int $quantity)
+    private static function guardQuantity(int $quantity): void
     {
         if ($quantity <= 0) {
             throw new InvalidQuantityException();

@@ -16,7 +16,7 @@ class Product
         self::SODA
     ];
 
-    private $name;
+    private string $name;
 
     private function __construct(string $name)
     {

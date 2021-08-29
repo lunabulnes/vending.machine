@@ -8,8 +8,14 @@ use JsonSerializable;
 
 class Money implements JsonSerializable
 {
-    private $groupedCoins;
+    /**
+     * @var array<int, array> $groupedCoins
+     */
+    private array $groupedCoins;
 
+    /**
+     * @param array<Coin> $coins
+     */
     private function __construct(array $coins)
     {
         $this->groupedCoins = [];
@@ -18,7 +24,10 @@ class Money implements JsonSerializable
         }
     }
 
-    public static function createFromCoins(array $coins = [])
+    /**
+     * @param array<Coin> $coins
+     */
+    public static function createFromCoins(array $coins = []): Money
     {
         return new self($coins);
     }
@@ -38,6 +47,9 @@ class Money implements JsonSerializable
         return $total;
     }
 
+    /**
+     * @return array<Coin>
+     */
     public function returnCoins(): array
     {
         $TotalCoins = [];
@@ -108,7 +120,11 @@ class Money implements JsonSerializable
         return $change;
     }
 
-    public function getCoins() {
+    /**
+     * @return array<Coin>
+     */
+    public function getCoins(): array
+    {
         $coins = [];
         foreach ($this->groupedCoins as $coinType => $coins) {
             $this->groupedCoins[$coinType] = array_merge($this->groupedCoins[$coinType] ?? [], $coins);
@@ -116,6 +132,9 @@ class Money implements JsonSerializable
         return $coins;
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     public function jsonSerialize(): array
     {
         $temp = [];
