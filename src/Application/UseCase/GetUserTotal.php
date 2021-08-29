@@ -6,14 +6,14 @@ use App\Domain\VendingMachine\VendingMachineRepository;
 
 class GetUserTotal
 {
-    private $vendingMachineRepository;
+    private VendingMachineRepository $vendingMachineRepository;
 
     public function __construct(VendingMachineRepository $vendingMachineRepository)
     {
         $this->vendingMachineRepository = $vendingMachineRepository;
     }
 
-    public function execute()
+    public function execute(): int
     {
         $vendingMachine = $this->vendingMachineRepository->get();
         return $vendingMachine->getUserMoney();

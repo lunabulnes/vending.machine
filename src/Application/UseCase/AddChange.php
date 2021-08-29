@@ -9,7 +9,7 @@ use App\Domain\VendingMachine\VendingMachineRepository;
 
 class AddChange
 {
-    private $vendingMachineRepository;
+    private VendingMachineRepository $vendingMachineRepository;
 
     public function __construct(VendingMachineRepository $vendingMachineRepository)
     {
@@ -19,18 +19,21 @@ class AddChange
     /**
      * @throws InvalidCoinException
      */
-    public function execute(int $value, int $quantity)
+    public function execute(int $value, int $quantity): void
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        $coins =$this->getCoins($value, $quantity);
+        $coins = $this->getCoins($value, $quantity);
         $vendingMachine->refillChange(Money::createFromCoins($coins));
         $this->vendingMachineRepository->save($vendingMachine);
     }
 
+
     /**
+     * @return array<Coin>
      * @throws InvalidCoinException
      */
-    private function getCoins(int $value, int $quantity) {
+    private function getCoins(int $value, int $quantity): array
+    {
         $coins = [];
         while ($quantity > 0) {
             $coins[] = Coin::create($value);

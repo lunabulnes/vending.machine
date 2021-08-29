@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 namespace App\Domain\Money;
 
@@ -19,7 +18,7 @@ class Coin implements JsonSerializable
         self::FIVE_CENTS
     ];
 
-    private $value;
+    private int $value;
 
     private function __construct(int $value)
     {

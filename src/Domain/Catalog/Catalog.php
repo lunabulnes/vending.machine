@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 namespace App\Domain\Catalog;
 
@@ -8,7 +7,8 @@ use JsonSerializable;
 
 class Catalog implements JsonSerializable
 {
-    private $stocks;
+    /** @var array<string, Stock> $stocks */
+    private array $stocks;
 
     private function __construct()
     {
@@ -48,7 +48,7 @@ class Catalog implements JsonSerializable
     /**
      * @throws ProductOutOfStockException
      */
-    public function decreaseStock(Product $product)
+    public function decreaseStock(Product $product): void
     {
         $stock = $this->getStockByProduct($product);
         $stock->decreaseQuantity();
@@ -73,6 +73,9 @@ class Catalog implements JsonSerializable
         }
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     public function jsonSerialize(): array
     {
         $temp = [];

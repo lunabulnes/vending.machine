@@ -8,17 +8,18 @@ use App\Infrastructure\Cli\Exception\MissingArgumentException;
 
 class BuyCommand implements Command
 {
-    private $buy;
+    private Buy $buy;
 
     public function __construct(Buy $buy)
     {
         $this->buy = $buy;
     }
 
+
     /**
      * @throws MissingArgumentException
      */
-    public function __invoke(array $args)
+    public function __invoke(array $args): string
     {
         if (!isset($args[0]) || !is_string($args[0])) {
             throw new MissingArgumentException('product_name');

@@ -11,20 +11,21 @@ use App\Infrastructure\Cli\Exception\MissingArgumentException;
 
 class AddStockCommand implements Command
 {
-    private $addStock;
+    private AddStock $addStock;
 
     public function __construct(AddStock $addStock)
     {
         $this->addStock = $addStock;
     }
 
+
     /**
-     * @throws MissingArgumentException
      * @throws InvalidPriceException
      * @throws InvalidProductException
      * @throws InvalidQuantityException
+     * @throws MissingArgumentException
      */
-    public function __invoke(array $args)
+    public function __invoke(array $args): void
     {
         if (!isset($args[0]) || !is_string($args[0])) {
             throw new MissingArgumentException('product_name');
@@ -38,6 +39,6 @@ class AddStockCommand implements Command
             throw new MissingArgumentException('quantity');
         }
 
-        $this->addStock->execute($args[0], $args[1], $args[2]);
+        $this->addStock->execute($args[0], intval($args[1]), intval($args[2]));
     }
 }

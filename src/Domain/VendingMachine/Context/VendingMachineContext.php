@@ -14,7 +14,7 @@ use App\Domain\VendingMachine\VendingMachine;
 
 class VendingMachineContext implements VendingMachine
 {
-    private $vendingMachineState;
+    private VendingMachineState $vendingMachineState;
 
     private function __construct(VendingMachineState $vendingMachineState)
     {
@@ -22,12 +22,12 @@ class VendingMachineContext implements VendingMachine
         $this->vendingMachineState->setContext($this);
     }
 
-    public static function create()
+    public static function create(): VendingMachine
     {
         return new self(ReadyVendingMachineState::create());
     }
 
-    public static function createWithState(VendingMachineState $vendingMachineState)
+    public static function createWithState(VendingMachineState $vendingMachineState): VendingMachine
     {
         return new self($vendingMachineState);
     }
@@ -88,6 +88,9 @@ class VendingMachineContext implements VendingMachine
         $this->vendingMachineState->stopMaintenance();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array
     {
         return [

@@ -8,8 +8,8 @@ use JsonSerializable;
 
 class Purchase implements JsonSerializable
 {
-    private $product;
-    private $change;
+    private Product $product;
+    private ?Money $change;
 
     public function __construct(Product $product, ?Money $change = null)
     {
@@ -17,11 +17,11 @@ class Purchase implements JsonSerializable
         $this->change = $change;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array
     {
-        return [
-            'product' => $this->product->name(),
-            'change' => $this->change->getCoins()
-        ];
+        return ['product' => $this->product->name()] + ($this->change ? ['change' => $this->change->getCoins()] : []);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 namespace App\Domain\Catalog;
 
@@ -16,7 +15,7 @@ class Product
         self::SODA
     ];
 
-    private $name;
+    private string $name;
 
     private function __construct(string $name)
     {

@@ -8,7 +8,7 @@ use App\Domain\VendingMachine\VendingMachineRepository;
 
 class AddCoin
 {
-    private $vendingMachineRepository;
+    private VendingMachineRepository $vendingMachineRepository;
 
     public function __construct(VendingMachineRepository $vendingMachineRepository)
     {
@@ -18,7 +18,7 @@ class AddCoin
     /**
      * @throws InvalidCoinException
      */
-    public function execute(int $value)
+    public function execute(int $value): void
     {
         $vendingMachine = $this->vendingMachineRepository->get();
         $vendingMachine->addUserCoin(Coin::create($value));

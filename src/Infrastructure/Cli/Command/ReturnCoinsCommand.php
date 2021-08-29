@@ -7,14 +7,14 @@ use App\Infrastructure\Cli\Command;
 
 class ReturnCoinsCommand implements Command
 {
-    private $returnCoins;
+    private ReturnCoins $returnCoins;
 
     public function __construct(ReturnCoins $returnCoins)
     {
         $this->returnCoins = $returnCoins;
     }
 
-    public function __invoke(array $args)
+    public function __invoke(array $args): string
     {
         return json_encode($this->returnCoins->execute());
     }

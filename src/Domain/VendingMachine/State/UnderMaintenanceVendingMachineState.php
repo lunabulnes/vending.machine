@@ -14,15 +14,16 @@ use JsonSerializable;
 
 class UnderMaintenanceVendingMachineState extends VendingMachineState implements JsonSerializable
 {
-    private $catalog;
-    private $machineMoney;
+    private Catalog $catalog;
+    private Money $machineMoney;
 
-    private function __construct(Money $machineMoney, Catalog $catalog){
+    private function __construct(Money $machineMoney, Catalog $catalog)
+    {
         $this->machineMoney = $machineMoney;
         $this->catalog = $catalog;
     }
 
-    public static function create()
+    public static function create(): UnderMaintenanceVendingMachineState
     {
         return new self(Money::createFromCoins(), Catalog::create());
     }
@@ -79,7 +80,7 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState implements
 
     public function addStock(Stock $stock): void
     {
-       $this->catalog->addStock($stock);
+        $this->catalog->addStock($stock);
     }
 
     public function refillChange(Money $change): void
@@ -108,6 +109,9 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState implements
         ));
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array
     {
         return [

@@ -6,6 +6,7 @@ use App\Domain\Catalog\Catalog;
 use App\Domain\Catalog\Product;
 use App\Domain\Catalog\Stock;
 use App\Domain\Money\Coin;
+use App\Domain\Money\Exception\InvalidCoinException;
 use App\Domain\Money\Money;
 use App\Domain\VendingMachine\State\ReadyVendingMachineState;
 use App\Domain\VendingMachine\State\VendingMachineState;
@@ -32,6 +33,10 @@ class DummyVendingMachineRepository implements VendingMachineRepository
         file_put_contents(self::FILE, json_encode($vendingMachine));
     }
 
+    /**
+     * @param array<string, array> $jsonMoney
+     * @throws InvalidCoinException
+     */
     private function hydrateMoney(array $jsonMoney): Money
     {
         $coins = [];
@@ -44,6 +49,9 @@ class DummyVendingMachineRepository implements VendingMachineRepository
         return Money::createFromCoins($coins);
     }
 
+    /**
+     * @param array<string, array> $jsonCatalog
+     */
     private function hydrateCatalog(array $jsonCatalog): Catalog
     {
         $catalog = Catalog::create();
@@ -60,7 +68,7 @@ class DummyVendingMachineRepository implements VendingMachineRepository
     {
         $string = file_get_contents(self::FILE);
 
-        $jsonContent = json_decode($string, true);
+        $jsonContent = json_decode(strval($string), true);
         $stateClass = $jsonContent['state']['class'];
         $jsonUserMoney = isset($jsonContent['state']['userMoney']) ? $jsonContent['state']['userMoney'] : [];
         $jsonMachineMoney = isset($jsonContent['state']['machineMoney']) ? $jsonContent['state']['machineMoney'] : [];

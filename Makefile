@@ -16,6 +16,8 @@ enter:
 	@docker-compose exec -u root ${PROJECT} /bin/sh
 
 test:
+	@docker-compose exec ${PROJECT} sh -c "./vendor/bin/phpstan analyse -c phpstan.neon"
+	@docker-compose exec ${PROJECT} sh -c "./vendor/bin/phpcs --standard=PSR12 src"
 	@docker-compose exec ${PROJECT} sh -c "./vendor/bin/phpunit --configuration=phpunit.xml"
 
 run:
