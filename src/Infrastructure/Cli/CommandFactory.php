@@ -47,7 +47,7 @@ class CommandFactory
                 return new StopMaintenanceCommand(new StopMaintenance(new DummyVendingMachineRepository()));
             case "ADDSTOCK":
                 return new AddStockCommand(new AddStock(new DummyVendingMachineRepository()));
-            case "ADDCHARGE":
+            case "ADDCHANGE":
                 return new AddChangeCommand(new AddChange(new DummyVendingMachineRepository()));
         }
 
