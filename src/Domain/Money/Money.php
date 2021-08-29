@@ -7,17 +7,15 @@ use JsonSerializable;
 
 class Money implements JsonSerializable
 {
-    /**
-     * @var array<int, array> $groupedCoins
-     */
-    private array $groupedCoins;
+    /** @var array<int, int> $coinTypes */
+    private array $coinTypes;
 
     /**
      * @param array<Coin> $coins
      */
     private function __construct(array $coins)
     {
-        $this->groupedCoins = [];
+        $this->coinTypes = [];
         foreach ($coins as $coin) {
             $this->addCoin($coin);
         }
@@ -31,16 +29,21 @@ class Money implements JsonSerializable
         return new self($coins);
     }
 
-    public function addCoin(Coin $coin): void
+    public function addCoin(Coin $coin, int $quantity = 1): void
     {
-        $this->groupedCoins[$coin->value()][] = $coin;
+        if (isset($this->coinTypes[$coin->value()])) {
+            $this->coinTypes[$coin->value()] += $quantity;
+        } else {
+            $this->coinTypes[$coin->value()] = $quantity;
+        }
+        $this->sortCoinTypesDesc();
     }
 
     public function getTotalMoney(): int
     {
         $total = 0;
-        foreach ($this->groupedCoins as $coinType => $coins) {
-            $total += $coinType * count($coins);
+        foreach ($this->coinTypes as $coinType => $quantity) {
+            $total += $coinType * $quantity;
         }
 
         return $total;
@@ -51,17 +54,14 @@ class Money implements JsonSerializable
      */
     public function returnCoins(): array
     {
-        $TotalCoins = [];
-        foreach ($this->groupedCoins as $coinType => $coins) {
-            $TotalCoins = array_merge($TotalCoins, $coins);
-        }
+        $TotalCoins = $this->getCoins();
         $this->resetMoney();
         return $TotalCoins;
     }
 
     public function resetMoney(): void
     {
-        $this->groupedCoins = [];
+        $this->coinTypes = [];
     }
 
     /**
@@ -76,19 +76,20 @@ class Money implements JsonSerializable
 
     public function add(Money $money): void
     {
-        foreach ($money->groupedCoins as $coinType => $coins) {
-            $this->groupedCoins[$coinType] = array_merge($this->groupedCoins[$coinType] ?? [], $coins);
+        foreach ($money->coinTypes as $coinType => $quantity) {
+            $this->addCoin(Coin::create($coinType), $quantity);
         }
+
+        $this->sortCoinTypesDesc();
     }
 
     public function subtract(Money $money): void
     {
-        foreach ($money->groupedCoins as $coinType => $coins) {
-            $this->groupedCoins[$coinType] = array_slice($this->groupedCoins[$coinType], count($coins));
-            if (count($this->groupedCoins[$coinType]) === 0) {
-                unset($this->groupedCoins[$coinType]);
-            }
+        foreach ($money->coinTypes as $coinType => $quantity) {
+            $this->coinTypes[$coinType] -= $quantity;
         }
+
+        $this->sortCoinTypesDesc();
     }
 
     /**
@@ -101,12 +102,11 @@ class Money implements JsonSerializable
         }
 
         $changeCoins = [];
-        foreach ($this->groupedCoins as $coinType => $coins) {
-            if ($coinType <= $amount) {
-                while (count($coins) > 0 && $amount > 0) {
-                    $changeCoins[] = array_shift($coins);
-                    $amount -= $coinType;
-                }
+        foreach ($this->coinTypes as $coinType => $quantity) {
+            while ($coinType <= $amount && $quantity > 0 && $amount > 0) {
+                $changeCoins[] = Coin::create($coinType);
+                $amount -= $coinType;
+                $quantity--;
             }
         }
 
@@ -116,6 +116,7 @@ class Money implements JsonSerializable
 
         $change = Money::createFromCoins($changeCoins);
         $this->subtract($change);
+
         return $change;
     }
 
@@ -125,8 +126,11 @@ class Money implements JsonSerializable
     public function getCoins(): array
     {
         $coins = [];
-        foreach ($this->groupedCoins as $coinType => $coins) {
-            $this->groupedCoins[$coinType] = array_merge($this->groupedCoins[$coinType] ?? [], $coins);
+        foreach ($this->coinTypes as $coinType => $quantity) {
+            while ($quantity > 0) {
+                $coins[] = Coin::create($coinType);
+                $quantity--;
+            }
         }
         return $coins;
     }
@@ -137,12 +141,17 @@ class Money implements JsonSerializable
     public function jsonSerialize(): array
     {
         $temp = [];
-        foreach ($this->groupedCoins as $coinType => $coins) {
+        foreach ($this->coinTypes as $coinType => $quantity) {
             $temp[] = [
-                'coinType' => $coinType,
-                'quantity' => count($coins),
+                'coinType' => $coinType / 100,
+                'quantity' => $quantity,
             ];
         }
         return $temp;
+    }
+
+    private function sortCoinTypesDesc(): void
+    {
+        krsort($this->coinTypes);
     }
 }

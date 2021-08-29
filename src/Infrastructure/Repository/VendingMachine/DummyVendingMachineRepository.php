@@ -13,7 +13,6 @@ use App\Domain\VendingMachine\State\VendingMachineState;
 use App\Domain\VendingMachine\VendingMachine;
 use App\Domain\VendingMachine\Context\VendingMachineContext;
 use App\Domain\VendingMachine\VendingMachineRepository;
-use phpDocumentor\Reflection\Types\This;
 
 class DummyVendingMachineRepository implements VendingMachineRepository
 {
@@ -43,7 +42,7 @@ class DummyVendingMachineRepository implements VendingMachineRepository
         $coins = [];
         foreach ($jsonMoney as $moneyItem) {
             while ($moneyItem['quantity'] > 0) {
-                $coins[] = Coin::create($moneyItem['coinType']);
+                $coins[] = Coin::create($moneyItem['coinType'] * 100);
                 $moneyItem['quantity'] -= 1;
             }
         }
@@ -85,17 +84,17 @@ class DummyVendingMachineRepository implements VendingMachineRepository
     {
         $catalog = $this->hydrateCatalog(
             [
-                ['productName' => 'Water', 'price' => 65, 'quantity' => 1],
-                ['productName' => 'Juice', 'price' => 100, 'quantity' => 1],
-                ['productName' => 'Soda', 'price' => 150, 'quantity' => 1],
+                ['productName' => 'Water', 'price' => 0.65, 'quantity' => 1],
+                ['productName' => 'Juice', 'price' => 1, 'quantity' => 1],
+                ['productName' => 'Soda', 'price' => 1.50, 'quantity' => 1],
             ]
         );
         $money = $this->hydrateMoney(
             [
-                ['coinType' => 100, 'quantity' => 10],
-                ['coinType' => 25, 'quantity' => 10],
-                ['coinType' => 10, 'quantity' => 10],
-                ['coinType' => 5, 'quantity' => 10],
+                ['coinType' => 1, 'quantity' => 10],
+                ['coinType' => 0.25, 'quantity' => 10],
+                ['coinType' => 0.10, 'quantity' => 10],
+                ['coinType' => 0.05, 'quantity' => 10],
             ]
         );
         return ReadyVendingMachineState::createWithMoneyAndCatalog($money, $catalog);

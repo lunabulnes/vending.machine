@@ -20,8 +20,9 @@ class AddCoin
      */
     public function execute(int $value): void
     {
+        $coin = Coin::create($value);
         $vendingMachine = $this->vendingMachineRepository->get();
-        $vendingMachine->addUserCoin(Coin::create($value));
+        $vendingMachine->addUserCoin($coin);
         $this->vendingMachineRepository->save($vendingMachine);
     }
 }

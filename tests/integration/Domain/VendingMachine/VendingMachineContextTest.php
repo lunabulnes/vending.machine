@@ -112,7 +112,7 @@ class VendingMachineContextTest extends TestCase
         }
 
         $returnedCoins = $vendingMachineContext->returnUserCoins();
-        $this->assertEquals($coins, $returnedCoins);
+        $this->assertEquals([Coin::create(100), Coin::create(25)], $returnedCoins);
         $this->assertEquals(0, $vendingMachineContext->getUserMoney());
     }
 

@@ -8,6 +8,8 @@ This is the complete list of commands available in the program:
 
 - `addcoin [COIN_VALUE] : void`
 
+- `returncoins : coins`
+
 - `getusertotal : float`
 
 - `buy [PRODUCT_NAME] : [Product, ?coins]`
