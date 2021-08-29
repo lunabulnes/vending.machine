@@ -17,7 +17,8 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState implements
     private Catalog $catalog;
     private Money $machineMoney;
 
-    private function __construct(Money $machineMoney, Catalog $catalog){
+    private function __construct(Money $machineMoney, Catalog $catalog)
+    {
         $this->machineMoney = $machineMoney;
         $this->catalog = $catalog;
     }
@@ -79,7 +80,7 @@ class UnderMaintenanceVendingMachineState extends VendingMachineState implements
 
     public function addStock(Stock $stock): void
     {
-       $this->catalog->addStock($stock);
+        $this->catalog->addStock($stock);
     }
 
     public function refillChange(Money $change): void

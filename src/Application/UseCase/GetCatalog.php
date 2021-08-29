@@ -19,5 +19,4 @@ class GetCatalog
         $vendingMachine = $this->vendingMachineRepository->get();
         return $vendingMachine->getCatalog();
     }
-
 }

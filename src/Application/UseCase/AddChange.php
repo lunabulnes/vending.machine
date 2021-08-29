@@ -22,7 +22,7 @@ class AddChange
     public function execute(int $value, int $quantity): void
     {
         $vendingMachine = $this->vendingMachineRepository->get();
-        $coins =$this->getCoins($value, $quantity);
+        $coins = $this->getCoins($value, $quantity);
         $vendingMachine->refillChange(Money::createFromCoins($coins));
         $this->vendingMachineRepository->save($vendingMachine);
     }
