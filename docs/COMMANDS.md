@@ -18,7 +18,7 @@ This is the complete list of commands available in the program:
 
 - `startmaintenance : void`
 
-- `stopmaintenance : void}`
+- `stopmaintenance : void`
 
 - `addstock [PRODUCT_NAME] [PRICE] [QUANTITY]`
 
