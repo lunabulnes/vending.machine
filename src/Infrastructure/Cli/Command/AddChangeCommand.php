@@ -22,13 +22,13 @@ class AddChangeCommand implements Command
      */
     public function __invoke(array $args): void
     {
-        if (!isset($args[0]) || !intval($args[0])) {
+        if (!isset($args[0]) || !floatval($args[0])) {
             throw new MissingArgumentException('coin_value');
         }
         if (!isset($args[1]) || !intval($args[1])) {
             throw new MissingArgumentException('quantity');
         }
 
-        $this->addChange->execute(intval($args[0]), intval($args[1]));
+        $this->addChange->execute(intval(floatval($args[0]) * 100), intval($args[1]));
     }
 }

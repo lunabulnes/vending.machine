@@ -39,12 +39,6 @@ class StockTest extends TestCase
         Stock::create($this->product, 77, 4);
     }
 
-    public function testThrowsExceptionIfQuantityEquals0()
-    {
-        $this->expectException(InvalidQuantityException::class);
-        Stock::create($this->product, 65, 0);
-    }
-
     public function testThrowsExceptionIfQuantityIsNegative()
     {
         $this->expectException(InvalidQuantityException::class);

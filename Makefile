@@ -10,7 +10,7 @@ stop:
 logs:
 	@docker-compose -f ${DOCKER_COMPOSE_FILE} logs ${PROJECT}
 
-dev: start logs
+debug: start logs
 
 enter:
 	@docker-compose exec -u root ${PROJECT} /bin/sh

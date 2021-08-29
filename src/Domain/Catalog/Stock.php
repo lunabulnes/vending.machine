@@ -66,7 +66,7 @@ class Stock
      */
     private static function guardQuantity(int $quantity): void
     {
-        if ($quantity <= 0) {
+        if ($quantity < 0) {
             throw new InvalidQuantityException();
         }
     }

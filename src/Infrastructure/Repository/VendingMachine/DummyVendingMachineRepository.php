@@ -13,6 +13,7 @@ use App\Domain\VendingMachine\State\VendingMachineState;
 use App\Domain\VendingMachine\VendingMachine;
 use App\Domain\VendingMachine\Context\VendingMachineContext;
 use App\Domain\VendingMachine\VendingMachineRepository;
+use phpDocumentor\Reflection\Types\This;
 
 class DummyVendingMachineRepository implements VendingMachineRepository
 {
@@ -23,7 +24,7 @@ class DummyVendingMachineRepository implements VendingMachineRepository
         if (file_exists(self::FILE)) {
             $state = $this->hydrateState();
         } else {
-            $state = ReadyVendingMachineState::create();
+            $state = $this->getDefaultState();
         }
         return VendingMachineContext::createWithState($state);
     }
@@ -34,7 +35,7 @@ class DummyVendingMachineRepository implements VendingMachineRepository
     }
 
     /**
-     * @param array<string, array> $jsonMoney
+     * @param array<int, array> $jsonMoney
      * @throws InvalidCoinException
      */
     private function hydrateMoney(array $jsonMoney): Money
@@ -50,7 +51,7 @@ class DummyVendingMachineRepository implements VendingMachineRepository
     }
 
     /**
-     * @param array<string, array> $jsonCatalog
+     * @param array<int, array> $jsonCatalog
      */
     private function hydrateCatalog(array $jsonCatalog): Catalog
     {
@@ -58,7 +59,7 @@ class DummyVendingMachineRepository implements VendingMachineRepository
 
         foreach ($jsonCatalog as $catalogItem) {
             $product = Product::create($catalogItem['productName']);
-            $stock = Stock::create($product, $catalogItem['price'], $catalogItem['quantity']);
+            $stock = Stock::create($product, $catalogItem['price'] * 100, $catalogItem['quantity']);
             $catalog->addStock($stock);
         }
         return $catalog;
@@ -78,5 +79,25 @@ class DummyVendingMachineRepository implements VendingMachineRepository
         $machineMoney = $this->hydrateMoney($jsonMachineMoney);
         $catalog = $this->hydrateCatalog($jsonCatalog);
         return $stateClass::createWithMoneyAndCatalog($machineMoney, $catalog, $userMoney);
+    }
+
+    private function getDefaultState(): ReadyVendingMachineState
+    {
+        $catalog = $this->hydrateCatalog(
+            [
+                ['productName' => 'Water', 'price' => 65, 'quantity' => 1],
+                ['productName' => 'Juice', 'price' => 100, 'quantity' => 1],
+                ['productName' => 'Soda', 'price' => 150, 'quantity' => 1],
+            ]
+        );
+        $money = $this->hydrateMoney(
+            [
+                ['coinType' => 100, 'quantity' => 10],
+                ['coinType' => 25, 'quantity' => 10],
+                ['coinType' => 10, 'quantity' => 10],
+                ['coinType' => 5, 'quantity' => 10],
+            ]
+        );
+        return ReadyVendingMachineState::createWithMoneyAndCatalog($money, $catalog);
     }
 }

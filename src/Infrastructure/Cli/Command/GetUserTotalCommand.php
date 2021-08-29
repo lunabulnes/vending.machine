@@ -14,8 +14,8 @@ class GetUserTotalCommand implements Command
         $this->getUserTotal = $getUserTotal;
     }
 
-    public function __invoke(array $args): int
+    public function __invoke(array $args): float
     {
-        return $this->getUserTotal->execute();
+        return $this->getUserTotal->execute() / 100;
     }
 }

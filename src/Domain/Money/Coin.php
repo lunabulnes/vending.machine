@@ -48,6 +48,6 @@ class Coin implements JsonSerializable
 
     public function jsonSerialize(): string
     {
-        return strval($this->value);
+        return strval($this->value / 100);
     }
 }

@@ -31,7 +31,7 @@ class AddStockCommand implements Command
             throw new MissingArgumentException('product_name');
         }
 
-        if (!isset($args[1]) || !intval($args[1])) {
+        if (!isset($args[1]) || !floatval($args[1])) {
             throw new MissingArgumentException('price');
         }
 
@@ -39,6 +39,6 @@ class AddStockCommand implements Command
             throw new MissingArgumentException('quantity');
         }
 
-        $this->addStock->execute($args[0], intval($args[1]), intval($args[2]));
+        $this->addStock->execute($args[0], intval(floatval($args[1]) * 100), intval($args[2]));
     }
 }

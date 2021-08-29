@@ -82,7 +82,7 @@ class Catalog implements JsonSerializable
         foreach ($this->stocks as $stock) {
             $temp[] = [
                 'productName' => $stock->product()->name(),
-                'price' => $stock->price(),
+                'price' => $stock->price() / 100,
                 'quantity' => $stock->quantity(),
             ];
         }
